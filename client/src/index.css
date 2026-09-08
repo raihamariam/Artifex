@@ -447,3 +447,7 @@ h1, h2, h3, p { margin-top: 0; }
 
 /* Product-layer navigation hover affordance. */
 .product-tabs button{position:relative;transition:color .18s ease-out,text-shadow .18s ease-out}.product-tabs button:hover,.product-tabs button:focus-visible{color:var(--acid);text-shadow:0 0 12px rgba(185,255,56,.7)}.product-tabs button:hover:after,.product-tabs button:focus-visible:after{content:"";position:absolute;left:0;right:0;bottom:-10px;height:2px;background:var(--acid);box-shadow:0 0 10px rgba(185,255,56,.95),0 0 22px rgba(185,255,56,.55)}.product-tabs button.active{color:var(--white)}.product-tabs button.active:hover,.product-tabs button.active:focus-visible{color:var(--acid)}
+
+/* Visual edit correction: create clear separation below the Product Graph heading. */
+.principle-visual.graph-expanded{margin-top:42px}
+@media(max-width:720px){.principle-visual.graph-expanded{margin-top:24px}}
