@@ -327,7 +327,7 @@ function Landing({ onJourney, onJoin }: { onJourney: () => void; onJoin: () => v
       <section className="principle-section" id="principle">
         <div className="section-meta"><span>04 / THE PRODUCT GRAPH</span><span>THE GARMENT BECOMES THE SYSTEM</span></div>
         <div className="principle-header"><p className="eyebrow"><span className="eyebrow-line" /> Continuity across every decision</p><h2>What if the garment<br /><em>became the system?</em></h2></div>
-        <div className="principle-visual graph-expanded supplied-figure-graph"><img className="product-graph-composition product-graph-only" src="/manus-storage/artifex-garment-product-graph-clean_17efdcbd.png" alt="Garment product graph figure" /></div>
+        <div className="principle-visual graph-expanded supplied-figure-graph"><img className="product-graph-composition product-graph-only" src="/manus-storage/artifex-3d-product-graph-b_c8ff742d.png" alt="3D one-garment Product Graph with connected fashion development relationships" /></div>
         <div className="principle-foot"><p>Hover a node to understand what changes with it. Then step through the garment into Artifex.</p><button className="button button-dark" onClick={onJourney}>Enter Artifex <ArrowRight size={16} /></button></div>
       </section>
 
