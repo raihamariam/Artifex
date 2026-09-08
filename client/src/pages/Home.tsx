@@ -18,6 +18,7 @@ import {
   Orbit,
   ScanLine,
   Send,
+  ShieldCheck,
   Sparkles,
   X,
 } from "lucide-react";
@@ -167,8 +168,19 @@ function TimelineProgress({ active }: { active: number }) {
 }
 
 function Nav({ view, onView, onJoin, menuOpen, setMenuOpen }: { view: View; onView: (view: View) => void; onJoin: () => void; menuOpen: boolean; setMenuOpen: (value: boolean) => void }) {
+  const [onDarkSurface, setOnDarkSurface] = useState(false);
+  useEffect(() => {
+    const updateNavSurface = () => {
+      const probe = document.elementFromPoint(window.innerWidth / 2, 82);
+      setOnDarkSurface(Boolean(probe?.closest(".dark-section, .investor-value-section")));
+    };
+    updateNavSurface();
+    window.addEventListener("scroll", updateNavSurface, { passive: true });
+    window.addEventListener("resize", updateNavSurface);
+    return () => { window.removeEventListener("scroll", updateNavSurface); window.removeEventListener("resize", updateNavSurface); };
+  }, [view]);
   return (
-    <header className="site-nav">
+    <header className={`site-nav ${onDarkSurface ? "on-dark" : ""}`}>
       <button className="brand-lockup" onClick={() => onView("landing")} aria-label="Return to Artifex landing page">
         <span className="brand-mark">A</span>
         <span>ARTIFEX</span>
@@ -290,15 +302,40 @@ function Landing({ onJourney, onJoin }: { onJourney: () => void; onJoin: () => v
         <div className="principle-foot"><p>Hover a node to understand what changes with it. Then step through the garment into Artifex.</p><button className="button button-dark" onClick={onJourney}>Enter Artifex <ArrowRight size={16} /></button></div>
       </section>
 
+      <section className="investor-value-section dark-section" id="value">
+        <div className="section-meta"><span>05 / THE VALUE</span><span>ONE CONNECTED PRODUCT TRUTH</span></div>
+        <div className="investor-value-header"><p className="eyebrow muted"><span className="eyebrow-line" /> The system-level opportunity</p><h2>Fewer broken<br /><em>decisions.</em></h2><p>Artifex does not replace every specialist tool. It preserves the garment’s meaning as people, systems, and decisions change.</p></div>
+        <div className="value-loop">
+          <div className="value-loop-core"><span>ONE GARMENT</span><b>PRODUCT<br />TRUTH</b><small>living + traceable</small></div>
+          <div className="value-outcome outcome-a"><span>01</span><b>Preserve intent</b><small>Creative decisions survive engineering handoffs.</small></div>
+          <div className="value-outcome outcome-b"><span>02</span><b>Reveal consequences</b><small>A material or pattern change exposes downstream impact early.</small></div>
+          <div className="value-outcome outcome-c"><span>03</span><b>Keep outputs current</b><small>BOMs, specifications, and approvals reflect the current product state.</small></div>
+          <div className="value-outcome outcome-d"><span>04</span><b>Learn from evidence</b><small>Fit, sample, quality, and production knowledge compounds.</small></div>
+          <div className="value-orbit orbit-a" /><div className="value-orbit orbit-b" />
+        </div>
+        <div className="value-proofline"><span>CREATIVE CONTINUITY</span><i /><span>EARLIER TRADE-OFFS</span><i /><span>TRACEABLE RELEASES</span><i /><span>COMPOUNDING KNOWLEDGE</span></div>
+      </section>
+
+      <section className="wedge-section" id="wedge">
+        <div className="section-meta"><span>06 / THE FIRST WEDGE</span><span>FOCUS WITHOUT A DEAD END</span></div>
+        <div className="wedge-header"><p className="eyebrow"><span className="eyebrow-line" /> Credible sequencing</p><h2>Start narrow.<br /><em>Build for the system.</em></h2><p>The architecture is broad by design. The first product should prove one connected workflow that customers value—not imitate an entire industry stack at launch.</p></div>
+        <div className="wedge-contrast">
+          <article className="wedge-card candidate"><span>CANDIDATE FIRST WEDGE</span><h3>Women’s dress development</h3><p>A constrained garment family where creative intent, body and fit context, AI-assisted pattern engineering, basic material behaviour, consumption, documentation, and version history stay connected.</p><div className="wedge-path">{["Design intent","Fit context","Pattern options","Material behaviour","Consumption","Living tech pack"].map((item, index) => <span key={item}><i>{String(index + 1).padStart(2,"0")}</i>{item}</span>)}</div></article>
+          <article className="wedge-card north-star"><span>LONG-TERM NORTH STAR</span><h3>Fashion development operating environment</h3><p>The same product graph can later activate sourcing, factories, costing, quality, collections, community, and enterprise governance—only when the user and product need them.</p><div className="north-star-map"><b>SHARED GARMENT GRAPH</b>{["SOURCE","COST","QUALITY","COLLECTION","KNOWLEDGE","GOVERNANCE"].map((item) => <span key={item}>{item}</span>)}</div></article>
+        </div>
+        <div className="entry-point-row"><span>VALID ENTRY POINTS</span>{["Creative intent","Existing pattern","Material","Cost constraint"].map((item) => <b key={item}>{item}</b>)}<small>One illustrative route is shown in the demo. Artifex does not force one workflow.</small></div>
+        <div className="wedge-boundary"><ShieldCheck size={17} /><span><b>Founder credibility:</b> the exact first wedge remains subject to customer discovery, pain frequency, economic impact, data availability, trust, and buying ownership.</span></div>
+      </section>
+
       <section className="position-section dark-section" id="position">
-        <div className="section-meta"><span>05 / THE POSITION</span><span>CONTINUITY ACROSS THE JOURNEY</span></div>
+        <div className="section-meta"><span>07 / THE POSITION</span><span>CONTINUITY ACROSS THE JOURNEY</span></div>
         <div className="position-header"><p className="eyebrow muted"><span className="eyebrow-line" /> Not another isolated tool</p><h2>Where creative<br /><em>intent</em> meets<br />product logic.</h2></div>
         <div className="position-rail"><div className="rail-card"><span>GENERATIVE DESIGN</span><p>creates possibilities</p><i>creative</i></div><div className="rail-card"><span>3D / CAD</span><p>models form</p><i>spatial</i></div><div className="rail-card"><span>PLM / DOCUMENTS</span><p>stores outputs</p><i>operational</i></div><div className="rail-card active"><span>ARTIFEX</span><p>connects the product journey</p><i>creative ↔ engineering</i></div></div>
         <p className="position-note">A conceptual product position: continuity across fashion development, with the designer still at the consequential boundary.</p>
       </section>
 
       <section className="waitlist-section" id="join">
-        <div className="waitlist-kicker"><span>ARTIFEX / 2026</span><span>EARLY ACCESS</span></div>
+        <div className="waitlist-kicker"><span>08 / ARTIFEX 2026</span><span>EARLY ACCESS</span></div>
         <h2>See what fashion<br /><em>development</em> could become.</h2>
         <p>Join the early-access list for designers, technical designers, pattern makers, and people shaping the future of fashion development.</p>
         <Waitlist />
@@ -412,9 +449,10 @@ function Journey({ onBack, onJoin }: { onBack: () => void; onJoin: () => void })
   return (
     <main className={`journey-page immersive-journey env-${key}`}>
       <div className="immersive-sticky-shell">
-      <div className="journey-topbar immersive-topbar"><button className="back-link" onClick={onBack}><ArrowLeft size={16} /> Leave Artifex</button><span className="journey-label">ARTIFEX &nbsp; AW27 / LOOK 07</span><div className="autonomous-status"><span /> Autonomy / {autonomy}</div><button className="journey-join" onClick={onJoin}>Join waitlist <ArrowUpRight size={15} /></button></div>
+      <div className="journey-topbar immersive-topbar"><button className="back-link" onClick={onBack}><ArrowLeft size={16} /> Leave Artifex</button><span className="journey-label">ARTIFEX &nbsp; NORTH-STAR SIMULATION / LOOK 07</span><div className="autonomous-status"><span /> Autonomy / {autonomy}</div><button className="journey-join" onClick={onJoin}>Join waitlist <ArrowUpRight size={15} /></button></div>
       <div className="product-tabs"><span className={chapter.phase === "Creative" ? "active" : ""}>Creative</span><span className={chapter.phase === "Engineering" ? "active" : ""}>Engineering</span><span className={chapter.phase === "Materials" ? "active" : ""}>Materials</span><span className={chapter.phase === "Production" ? "active" : ""}>Production</span><span className={chapter.phase === "Release" ? "active" : ""}>Release</span><div className="journey-mode"><button className={mode === "guided" ? "active" : ""} onClick={() => setMode("guided")}>● Journey</button><button className={mode === "explore" ? "active" : ""} onClick={() => setMode("explore")}>○ Explore</button></div></div>
-      <div className="immersive-progress"><span>{String(active + 1).padStart(2, "0")} / 22</span><TimelineProgress active={active} /><span>{chapter.environment}</span></div>
+      <div className="immersive-progress"><span>{String(active + 1).padStart(2, "0")} / 22</span><TimelineProgress active={active} /><span>{chapter.environment} · one valid route</span></div>
+      {active === 0 && <div className="journey-wedge-note"><span>CANDIDATE FIRST WEDGE</span><b>Constrained dress development</b><small>Structured intent → fit context → pattern options → material behaviour → living documentation</small></div>}
       <section className="immersive-layout">
         <aside className="story-panel"><p className="eyebrow"><span className="eyebrow-line" /> {chapter.phase} / {chapter.environment}</p><h1>{chapter.title}</h1><p>{chapter.body}</p><div className="causal-line"><span>PRODUCT STATE</span><b>Garment / 001</b><small>{active === 0 ? "creative intent created" : `${journeyChapters[active - 1].key} → ${chapter.key}`}</small></div><div className="journey-stepper"><button onClick={() => go(active - 1)} disabled={!active}><ChevronLeft size={17} /></button><span>{String(active + 1).padStart(2, "0")} / 22</span><button onClick={() => go(active + 1)} disabled={active === journeyChapters.length - 1}><ChevronRight size={17} /></button></div></aside>
 
