@@ -444,3 +444,6 @@ h1, h2, h3, p { margin-top: 0; }
 @media(max-width:720px){.recent-comments{margin-top:12px;gap:8px}.recent-comments article p{font-size:7px}.community-project-preview{grid-template-columns:58px 1fr}.community-project-preview b{font-size:12px}.community-meta span{grid-template-columns:67px 1fr;font-size:6px}.community-actions button{font-size:6px}.community-metrics{gap:7px}.community-metrics b{font-size:15px}}
 
 .product-tabs button{appearance:none;border:0;background:transparent;color:inherit;font:inherit;text-transform:inherit;letter-spacing:inherit;padding:0;cursor:pointer}.product-tabs button:focus-visible{outline:1px solid var(--acid);outline-offset:5px}
+
+/* Product-layer navigation hover affordance. */
+.product-tabs button{position:relative;transition:color .18s ease-out,text-shadow .18s ease-out}.product-tabs button:hover,.product-tabs button:focus-visible{color:var(--acid);text-shadow:0 0 12px rgba(185,255,56,.7)}.product-tabs button:hover:after,.product-tabs button:focus-visible:after{content:"";position:absolute;left:0;right:0;bottom:-10px;height:2px;background:var(--acid);box-shadow:0 0 10px rgba(185,255,56,.95),0 0 22px rgba(185,255,56,.55)}.product-tabs button.active{color:var(--white)}.product-tabs button.active:hover,.product-tabs button.active:focus-visible{color:var(--acid)}
