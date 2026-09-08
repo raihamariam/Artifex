@@ -146,6 +146,57 @@ function Waitlist({ compact = false }: { compact?: boolean }) {
   );
 }
 
+const cinematicChapters = [
+  { key: "intent", number: "01", kicker: "CREATIVE INTENT", title: "Begin with the feeling.", body: "A sketch, a surface, a silhouette — the creative signal stays visible as the garment starts to take form.", tag: "sketch → direction" },
+  { key: "fit", number: "02", kicker: "FIT + BODY", title: "Give the idea a body.", body: "Fit is not a late-stage correction. It is context around the creative decision, from close to voluminous.", tag: "silhouette → fit" },
+  { key: "material", number: "03", kicker: "MATERIAL INTELLIGENCE", title: "Let surface change the story.", body: "Reflective, matte, fluid, structured — explore material direction while the product state stays connected.", tag: "fabric → drape" },
+  { key: "form", number: "04", kicker: "3D GARMENT", title: "Watch the idea hold form.", body: "Move around the garment. Zoom into the surface. See the piece as an object before it becomes a file.", tag: "form → exploration" },
+  { key: "pattern", number: "05", kicker: "PATTERN INTELLIGENCE", title: "Open the construction.", body: "The pattern pieces unfold from the silhouette — another view of the same evolving product.", tag: "garment → geometry" },
+  { key: "dependencies", number: "06", kicker: "CONNECTED DEPENDENCIES", title: "See what a decision touches.", body: "A material choice can affect drape, construction, documentation, and the way the garment is understood downstream.", tag: "decision → impact" },
+  { key: "documentation", number: "07", kicker: "LIVING DOCUMENTATION", title: "Keep the product legible.", body: "Technical views, decisions, and context stay close to the garment instead of disappearing into disconnected outputs.", tag: "state → clarity" },
+  { key: "approval", number: "08", kicker: "HUMAN APPROVAL", title: "The designer decides.", body: "Artifex can propose a direction. Human expertise remains the control system at consequential boundaries.", tag: "propose → decide" },
+];
+
+function CinematicScroll({ onJourney }: { onJourney: () => void }) {
+  const [active, setActive] = useState(0);
+  const [material, setMaterial] = useState("silver");
+  const chapterRefs = useRef<(HTMLDivElement | null)[]>([]);
+  useEffect(() => {
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          const index = Number((entry.target as HTMLElement).dataset.index);
+          setActive(index);
+        }
+      });
+    }, { threshold: .55, rootMargin: "-12% 0px -22% 0px" });
+    chapterRefs.current.forEach((node) => node && observer.observe(node));
+    return () => observer.disconnect();
+  }, []);
+  const chapter = cinematicChapters[active];
+  const stageMaterial = active === 2 ? material : active === 0 ? "ink" : active === 3 || active === 4 ? "silver" : active === 5 ? "acid" : "silver";
+  return (
+    <section className="cinematic-section dark-section" id="designer-story">
+      <div className="section-meta cinematic-meta"><span>03 / THE DESIGNER JOURNEY</span><span>SCROLL TO UNFOLD THE PRODUCT</span></div>
+      <div className="cinematic-layout">
+        <div className="cinematic-copy">
+          <div className="cinematic-intro"><p className="eyebrow muted"><span className="eyebrow-line" /> One continuous workflow</p><h2>Every decision<br /><em>stays connected.</em></h2><p>Scroll through the conceptual Artifex journey. Each chapter reveals another layer of the same garment.</p></div>
+          <div className="chapter-stack">
+            {cinematicChapters.map((item, index) => <div ref={(node) => { chapterRefs.current[index] = node; }} data-index={index} className={`cinematic-chapter ${index === active ? "is-active" : ""}`} key={item.key}><div className="chapter-number">{item.number}</div><div><span className="chapter-kicker">{item.kicker}</span><h3>{item.title}</h3><p>{item.body}</p><span className="chapter-tag">{item.tag}</span></div></div>)}
+          </div>
+          <button className="button button-acid cinematic-cta" onClick={onJourney}>Open the interactive journey <ArrowUpRight size={17} /></button>
+        </div>
+        <div className="cinematic-sticky">
+          <div className="cinematic-stage-label"><span>{chapter.number} / 08</span><span>{chapter.kicker}</span></div>
+          <div className="cinematic-stage"><div className="stage-grid" /><div className={`stage-scan scan-${active}`} /><Garment mode="studio" material={stageMaterial} pattern={active === 4} /><div className="stage-caption"><span>{chapter.tag}</span><span>ARTIFEX / CONCEPTUAL VIEW</span></div><div className="stage-corner corner-tl" /><div className="stage-corner corner-br" />{active === 5 && <div className="dependency-pulse"><span>FIT</span><span>MATERIAL</span><span>PATTERN</span><span>DOCS</span></div>}{active === 6 && <div className="doc-stack"><span>TECHNICAL VIEW</span><span>CONSTRUCTION NOTE</span><span>PRODUCT STATE / 001</span></div>}{active === 7 && <div className="approval-stamp"><Check size={16} /> HUMAN CONTROL</div>}</div>
+          {active === 2 && <div className="stage-controls"><span>Material direction</span><button className={material === "silver" ? "selected" : ""} onClick={() => setMaterial("silver")}><i className="swatch silver" /> Reflective</button><button className={material === "matte" ? "selected" : ""} onClick={() => setMaterial("matte")}><i className="swatch matte" /> Matte</button><button className={material === "acid" ? "selected" : ""} onClick={() => setMaterial("acid")}><i className="swatch acid" /> Acid</button></div>}
+          <div className="cinematic-progress"><div className="progress-track">{cinematicChapters.map((item, index) => <span key={item.key} className={index <= active ? "active" : ""} />)}</div><span>scroll / {chapter.number}</span></div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
 function Landing({ onJourney, onJoin }: { onJourney: () => void; onJoin: () => void }) {
   return (
     <main className="landing-page">
@@ -181,11 +232,7 @@ function Landing({ onJourney, onJoin }: { onJourney: () => void; onJoin: () => v
         <div className="principle-foot"><p>Every view stays connected to the same evolving product — not a new translation.</p><button className="button button-outline" onClick={onJourney}>Enter the journey <ArrowRight size={16} /></button></div>
       </section>
 
-      <section className="demo-preview-section dark-section">
-        <div className="section-meta"><span>03 / A DESIGNER'S JOURNEY</span><span>CONCEPTUAL WORKFLOW</span></div>
-        <div className="preview-head"><div><p className="eyebrow muted"><span className="eyebrow-line" /> Start with creative intent</p><h2>See the idea<br /><em>hold form.</em></h2></div><p className="preview-intro">From the first direction to a connected technical view, Artifex is imagined as one continuous creative-engineering workflow.</p></div>
-        <div className="preview-stage"><div className="preview-annotation left-annotation"><span>01</span><b>creative direction</b><small>volume / surface / asymmetry</small></div><Garment mode="studio" material="green" /><div className="preview-annotation right-annotation"><span>02</span><b>3D garment state</b><small>rotate / zoom / explore</small></div><button className="play-orbit" onClick={onJourney}><Orbit size={17} /> Open interactive journey <ArrowUpRight size={16} /></button></div>
-      </section>
+      <CinematicScroll onJourney={onJourney} />
 
       <section className="capability-section">
         <div className="section-meta"><span>04 / CONNECTED BY DESIGN</span><span>VISUAL CONCEPT</span></div>
