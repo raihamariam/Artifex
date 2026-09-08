@@ -192,6 +192,14 @@ function Garment({ mode = "hero", material = "silver", pattern = false }: { mode
   );
 }
 
+function ProductGraphScene() {
+  const nodes = [
+    ["creative", "CREATIVE", "Creative intent"], ["fit", "FIT", "Body + ease"], ["pattern", "PATTERN", "Geometry"], ["material", "MATERIAL", "Drape + supply"], ["production", "PRODUCTION", "Quality + output"],
+    ["documentation", "DOCUMENTATION", "Living tech pack"], ["evidence", "EVIDENCE", "Sample feedback"], ["knowledge", "KNOWLEDGE", "Compounding history"], ["community", "COMMUNITY", "Shared lineage"], ["history", "HISTORY", "Version truth"],
+  ];
+  return <div className="product-graph-scene" aria-label="Animated one-garment product graph"><div className="product-graph-grid" /><div className="product-graph-ambient" /><div className="product-graph-garment"><Garment mode="studio" material="silver" /></div><div className="product-graph-badge">ONE<br />GARMENT</div><div className="product-graph-connectors">{nodes.map(([key]) => <span className={`graph-connector connector-${key}`} key={key} />)}</div><div className="product-graph-nodes">{nodes.map(([key, label, sub]) => <button className={`product-graph-node graph-node-${key}`} key={key}><i />{label}<small>{sub}</small></button>)}</div><div className="product-graph-caption"><span>GARMENT / 001</span><span>DRAG TO ROTATE ↔</span></div></div>;
+}
+
 function TimelineProgress({ active, total = journeyChapters.length }: { active: number; total?: number }) {
   return <div className="progress-track">{Array.from({ length: total }).map((_, index) => <span key={index} className={index <= active ? "active" : ""} />)}</div>;
 }
@@ -327,7 +335,7 @@ function Landing({ onJourney, onJoin }: { onJourney: () => void; onJoin: () => v
       <section className="principle-section" id="principle">
         <div className="section-meta"><span>04 / THE PRODUCT GRAPH</span><span>THE GARMENT BECOMES THE SYSTEM</span></div>
         <div className="principle-header"><p className="eyebrow"><span className="eyebrow-line" /> Continuity across every decision</p><h2>What if the garment<br /><em>became the system?</em></h2></div>
-        <div className="principle-visual graph-expanded supplied-figure-graph"><img className="product-graph-composition product-graph-only" src="/manus-storage/artifex-3d-product-graph-b_c8ff742d.png" alt="3D one-garment Product Graph with connected fashion development relationships" /></div>
+        <div className="principle-visual graph-expanded supplied-figure-graph"><ProductGraphScene /></div>
         <div className="principle-foot"><p>Hover a node to understand what changes with it. Then step through the garment into Artifex.</p><button className="button button-dark" onClick={onJourney}>Enter Artifex <ArrowRight size={16} /></button></div>
       </section>
 
