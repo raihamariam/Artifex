@@ -19,71 +19,66 @@ import {
 } from "lucide-react";
 
 type View = "landing" | "journey" | "wireframes";
-type DemoStep = "intent" | "material" | "form" | "pattern" | "impact" | "approve";
-
-const stepMeta: Record<DemoStep, { number: string; title: string; kicker: string; body: string }> = {
-  intent: {
-    number: "01",
-    title: "Start with intent.",
-    kicker: "CREATIVE DIRECTION",
-    body: "Begin with the feeling, silhouette, and point of view — not with a blank technical file.",
-  },
-  material: {
-    number: "02",
-    title: "Give it a material language.",
-    kicker: "FIT + MATERIAL",
-    body: "Select the tension between fluid, structured, matte, and reflective. The garment responds as a connected idea.",
-  },
-  form: {
-    number: "03",
-    title: "Let the idea hold form.",
-    kicker: "3D GARMENT",
-    body: "Explore the garment as a living object. Rotate the concept. Zoom into the surface. See what the eye cannot hold in a sketch.",
-  },
-  pattern: {
-    number: "04",
-    title: "Open the construction.",
-    kicker: "PATTERN INTELLIGENCE",
-    body: "The underlying pieces unfold from the silhouette — another view of the same product state.",
-  },
-  impact: {
-    number: "05",
-    title: "See what a decision touches.",
-    kicker: "CONNECTED DEPENDENCIES",
-    body: "Material, fit, pattern, construction, and documentation remain visibly related as the garment evolves.",
-  },
-  approve: {
-    number: "06",
-    title: "Keep the designer in control.",
-    kicker: "HUMAN APPROVAL",
-    body: "Artifex can propose a direction. The designer decides what becomes part of the product.",
-  },
-};
-
-const steps = Object.keys(stepMeta) as DemoStep[];
-
 const storyboardScreens = [
-  ["01", "Investor hero", "From creative intent to production reality", "Hero garment resolves from wireframe to material."],
-  ["02", "Design layer", "Begin with the feeling", "Moodboard signals orbit the avatar and set direction."],
-  ["03", "Garment understanding", "Make the idea legible", "Semantic pins identify volume, surface, and zones."],
-  ["04", "3D garment", "Let the idea hold form", "Avatar rotates through a 360° product view."],
-  ["05", "X-ray mode", "Open the construction", "Surface fades to reveal seams, panels, and supports."],
-  ["06", "Pattern alternatives", "Two ways to engineer one idea", "Pattern pieces unfold into A/B garment states."],
-  ["07", "Fit + grading", "Give the garment a body", "Two avatars show the same garment across size contexts."],
-  ["08", "Material intelligence", "Same design, different behaviour", "Material swap changes surface, drape, and volume."],
-  ["09", "Product graph", "Propagate a decision", "A luminous ripple travels through downstream objects."],
-  ["10", "Impact lens", "See what a decision touches", "Affected objects pulse around the garment."],
-  ["11", "Versioning", "Compare and merge", "Two versions crossfade on the same avatar."],
-  ["12", "Production", "Make the intent manufacturable", "Panels arrange into a production view."],
-  ["13", "Costing", "Connect product and commercial state", "Commercial layers orbit the garment."],
-  ["14", "Sourcing", "Match requirements to materials", "Swatches travel from supply rail to garment."],
-  ["15", "Sampling", "Close the physical loop", "Digital garment dissolves into sample evidence."],
-  ["16", "Documentation", "Keep the product legible", "Tech pack and BOM orbit the current state."],
-  ["17", "Mission control", "Scale from style to collection", "One garment pulls back into a style constellation."],
-  ["18", "Copilot", "Ask about this product", "Response highlights only grounded product objects."],
-  ["19", "Human approval", "The designer decides", "Proposed and original states merge or return."],
-  ["20", "Waitlist", "Join Artifex", "The completed journey converts into a qualified form."],
+  ["L1", "Cinematic hero", "An idea is only the beginning", "Sketch gains volume, seams, texture, and dimensionality before pattern pieces briefly detach."],
+  ["L2", "Garment system", "A garment is not a file", "Geometry, fit, material, construction, cost, supply, production, evidence, and history light up on one garment."],
+  ["L3", "Fragmentation", "Every decision lives somewhere else", "Files and conversations fragment around the garment, then collapse back into one object."],
+  ["L4", "Product graph", "What if the garment became the system?", "Connected nodes emerge and reveal downstream relationships on hover."],
+  ["01", "Design layer", "Interpret creative intent", "Moodboard, sketch, swatches, and notes transform into a ghost garment on an avatar."],
+  ["02", "Garment understanding", "Make the garment legible", "Callouts identify structured bodice, drape, waist tension, volume, panels, and closure."],
+  ["03", "Collaboration", "Branch without losing the garment", "Three versions fan sideways; compare overlays semantic differences."],
+  ["04", "Fit + grading", "One garment across five bodies", "A size scrubber moves through 06–14 while fit-map regions expose tension and excess."],
+  ["05", "Engineering", "Diagnose before generating", "Creative and engineering constraints appear around the detected fit issue."],
+  ["P", "Pattern alternatives", "Same idea. Three engineered realities.", "Pattern pieces unfold and reconstruct as alternatives A, B, and C."],
+  ["I", "Impact Lens", "There is no single best garment", "Optimise for intent, fit, cost, waste, or production to change the recommendation."],
+  ["06", "Construction", "Reveal how the garment is assembled", "Outer fabric becomes translucent while assembly steps highlight in sequence."],
+  ["07", "Materials + trims", "Give every component intelligence", "A material tray connects shell, lining, interfacing, zipper, thread, and trims to the garment."],
+  ["08", "Textile twin", "Same garment. Different fabric behaviour.", "Silk-viscose and wool-crepe avatars move together while drape visibly diverges."],
+  ["08B", "Propagation", "Let the change travel", "Selecting wool sends a pulse through drape, fit, pattern, consumption, cost, construction, and documentation."],
+  ["09", "Surface + colour", "Move from engineering back to expression", "The garment enters a runway stage and changes colourway and finish."],
+  ["10", "X-ray", "Fashion to engineering", "A draggable slider peels through surface, shell, interfacing, structure, lining, seams, pattern, and body."],
+  ["11", "Production", "Optimise the physical reality", "Pattern pieces rotate, slide, and nest across a virtual fabric roll."],
+  ["12", "Live BOM", "Documentation builds from product truth", "Clicking garment regions lights BOM rows while technical pages assemble behind the avatar."],
+  ["13", "Sampling + quality", "Let physical evidence return", "The sample timeline traces a fit observation back to garment, pattern, and correction."],
+  ["14", "Sourcing", "Change supply, see consequences", "Supplier choice changes cost, lead time, MOQ, and risk around the garment."],
+  ["15", "True costing", "See the garment commercially", "The garment explodes into priced components and scales across production volume."],
+  ["16", "Approval + release", "Production readiness has a boundary", "A role switch unlocks Release to Production and stamps the garment ready."],
+  ["17", "Mission control", "One garment becomes a collection", "The camera pulls back from one avatar to an AW27 collection heat map."],
+  ["18", "Knowledge system", "Every garment builds knowledge", "Selecting a seam reveals connected construction, material, fit, history, and QC knowledge."],
+  ["19", "Copilot", "The copilot controls the system", "A request triggers visual construction analysis, comparisons, tests, and constraint checks."],
+  ["20", "Autonomy", "Observe. Suggest. Execute.", "A low-risk fit correction runs through policy, pattern, simulation, documentation, and history."],
+  ["21", "Evidence", "Why did Artifex change this?", "An evidence drawer explains issue, rule, action, impact, and confidence."],
+  ["22", "Community", "Create a new lineage", "Discover, fork, remix, collaborate, or hire without destructive copying."],
+  ["E", "Ending", "One garment. One evolving system.", "Every layer collapses elegantly into the exact garment that began as a sketch."],
+  ["W", "Waitlist", "Join Artifex", "A premium overlay captures name, email, company, role, and optional reason for interest."],
 ] as const;
+
+const journeyChapters = [
+  { key: "creative", phase: "Creative", title: "Interpret creative intent", body: "An editorial development board becomes a structured garment project.", environment: "editorial board" },
+  { key: "understanding", phase: "Creative", title: "Understand the garment", body: "Artifex identifies the garment's silhouette, drape, structure, and construction zones.", environment: "garment reading" },
+  { key: "versions", phase: "Creative", title: "Branch without losing truth", body: "Creative, fit, and production-safe versions remain connected to one product lineage.", environment: "repository" },
+  { key: "fit", phase: "Engineering", title: "Find the fit problem", body: "One garment moves across sizes 06–14 until a back-waist inconsistency appears.", environment: "fit laboratory" },
+  { key: "engineering", phase: "Engineering", title: "Diagnose before generating", body: "Creative constraints and engineering constraints frame the problem before alternatives are proposed.", environment: "engineering core" },
+  { key: "pattern", phase: "Engineering", title: "Engineer three realities", body: "The garment unfolds into pattern alternatives that preserve the same creative idea differently.", environment: "pattern workstation" },
+  { key: "impact", phase: "Engineering", title: "Choose what matters", body: "Impact Lens changes the recommended alternative according to intent, fit, cost, waste, or production.", environment: "decision space" },
+  { key: "construction", phase: "Engineering", title: "Reveal the assembly", body: "The selected pattern rejoins the avatar and the garment opens into construction sequence.", environment: "assembly view" },
+  { key: "materials", phase: "Materials", title: "Connect every component", body: "Shell, lining, interfacing, zipper, thread, and trims become intelligent product objects.", environment: "material laboratory" },
+  { key: "textile", phase: "Materials", title: "Compare textile twins", body: "The same garment moves in silk-viscose and wool-crepe, revealing different drape and structure.", environment: "textile twin" },
+  { key: "propagation", phase: "Materials", title: "Let the change travel", body: "Selecting wool propagates through drape, fit, pattern, consumption, cost, construction, and documentation.", environment: "product graph" },
+  { key: "surface", phase: "Materials", title: "Return to expression", body: "Colourways and finishing update instantly on a clean runway stage.", environment: "runway colour lab" },
+  { key: "xray", phase: "Engineering", title: "Move from fashion to engineering", body: "A vertical slider peels through surface, shell, structure, lining, seams, pattern, and body.", environment: "x-ray anatomy" },
+  { key: "production", phase: "Production", title: "Optimise the physical reality", body: "Pattern pieces leave the avatar, nest across a fabric roll, and improve material utilisation.", environment: "optimisation environment" },
+  { key: "bom", phase: "Production", title: "Build living documentation", body: "Garment regions illuminate the BOM while production pages assemble around the avatar.", environment: "live documents" },
+  { key: "sampling", phase: "Production", title: "Bring evidence back", body: "A waist drag-line observation returns from the sample to the digital garment and pattern correction.", environment: "sample timeline" },
+  { key: "sourcing", phase: "Production", title: "Change supply, see consequences", body: "Supplier choice immediately changes cost, lead time, minimum order, and risk.", environment: "supply intelligence" },
+  { key: "costing", phase: "Production", title: "See the garment commercially", body: "Components carry prices and production volume reveals the commercial effect of earlier decisions.", environment: "commercial intelligence" },
+  { key: "release", phase: "Release", title: "Cross the approval boundary", body: "A production approver unlocks release and the garment becomes production ready.", environment: "release gate" },
+  { key: "mission", phase: "Release", title: "Scale from style to collection", body: "The camera moves from one garment to an AW27 collection command centre.", environment: "mission control" },
+  { key: "knowledge", phase: "Release", title: "Turn garments into knowledge", body: "A selected seam reveals related construction, material, fit, history, and quality knowledge.", environment: "knowledge graph" },
+  { key: "autonomy", phase: "Release", title: "Observe. Suggest. Execute.", body: "The copilot controls a bounded workflow, then evidence explains every autonomous action.", environment: "autonomy + evidence" },
+] as const;
+
+type JourneyKey = typeof journeyChapters[number]["key"];
 
 function WireframeMap({ onBack, onJourney, onJoin }: { onBack: () => void; onJourney: () => void; onJoin: () => void }) {
   const [selected, setSelected] = useState(0);
@@ -92,10 +87,10 @@ function WireframeMap({ onBack, onJourney, onJoin }: { onBack: () => void; onJou
   return (
     <main className="wireframe-page">
       <div className="wireframe-topbar"><button className="back-link" onClick={onBack}><ArrowLeft size={16} /> Back to landing</button><span className="journey-label">ARTIFEX / VISUAL WIREFRAME MAP</span><button className="journey-join" onClick={onJoin}>Join waitlist <ArrowUpRight size={15} /></button></div>
-      <section className="wireframe-intro"><p className="eyebrow"><span className="eyebrow-line" /> Make the journey visible</p><h1>One garment.<br /><em>Twenty states.</em></h1><p>Use this map to understand how the landing page and designer simulation fit together. Select a screen to inspect the layout, the animation, and the visitor action.</p><div className="wireframe-actions"><button className="button button-dark" onClick={onJourney}>Play the cinematic journey <ArrowUpRight size={16} /></button><button className="button button-outline" onClick={onJoin}>Join Artifex Waitlist <ArrowUpRight size={16} /></button></div><div className="experience-balance"><div className="balance-copy"><span>EXPERIENCE MODEL</span><b>70% guided story / 30% explore</b><small>Investors see a controlled narrative. Designers can step inside the simulated product.</small></div><div className="mode-switch"><button className={mode === "guided" ? "active" : ""} onClick={() => setMode("guided")}>Guided</button><button className={mode === "explore" ? "active" : ""} onClick={() => setMode("explore")}>Explore</button></div></div><div className="garment-continuity-note"><span className="continuity-dot" /><span><b>Same garment throughout.</b> Every screen changes the state of one evolving digital garment.</span></div></section>
+      <section className="wireframe-intro"><p className="eyebrow"><span className="eyebrow-line" /> Make the journey visible</p><h1>One garment.<br /><em>Twenty-eight states.</em></h1><p>Use this map to understand how the four-part investor opening leads into the 22-chapter designer simulation, the ending, and the waitlist conversion.</p><div className="wireframe-actions"><button className="button button-dark" onClick={onJourney}>Play the cinematic journey <ArrowUpRight size={16} /></button><button className="button button-outline" onClick={onJoin}>Join Artifex Waitlist <ArrowUpRight size={16} /></button></div><div className="experience-balance"><div className="balance-copy"><span>EXPERIENCE MODEL</span><b>70% guided story / 30% explore</b><small>Investors see a controlled narrative. Designers can step inside the simulated product.</small></div><div className="mode-switch"><button className={mode === "guided" ? "active" : ""} onClick={() => setMode("guided")}>Guided</button><button className={mode === "explore" ? "active" : ""} onClick={() => setMode("explore")}>Explore</button></div></div><div className="garment-continuity-note"><span className="continuity-dot" /><span><b>Same garment throughout.</b> Every screen changes the state of one evolving digital garment.</span></div></section>
       <section className="wireframe-workspace">
-        <aside className="wireframe-index"><div className="wireframe-index-title"><span>SCREEN MAP</span><small>{String(selected + 1).padStart(2, "0")} / 20 selected</small></div>{storyboardScreens.map((item, index) => <button key={item[0]} className={index === selected ? "map-item active" : "map-item"} onClick={() => setSelected(index)}><span>{item[0]}</span><b>{item[1]}</b><small>{item[2]}</small></button>)}</aside>
-        <div className={`wireframe-detail mode-${mode}`}><div className="wireframe-detail-head"><div><span className="chapter-kicker">{screen[0]} / {screen[1]}</span><h2>{screen[2]}</h2></div><div className="wireframe-arrow"><button onClick={() => setSelected(Math.max(0, selected - 1))} disabled={!selected}><ChevronLeft size={17} /></button><button onClick={() => setSelected(Math.min(storyboardScreens.length - 1, selected + 1))} disabled={selected === storyboardScreens.length - 1}><ChevronRight size={17} /></button></div></div><div className={`wireframe-canvas canvas-${selected + 1}`}><div className="canvas-top"><span>ARTIFEX / {screen[0]}</span><span>{screen[1].toUpperCase()}</span></div><div className="canvas-grid" />{selected === 0 && <><div className="canvas-headline">FROM CREATIVE<br /><em>INTENT</em> TO<br />PRODUCTION REALITY.</div><div className="canvas-garment"><Garment mode="mini" /></div><div className="canvas-annotation annotation-a">SILHOUETTE <i>01</i></div><div className="canvas-annotation annotation-b">SURFACE <i>02</i></div></>}{selected > 0 && selected < 19 && <><div className="canvas-wire-object"><div className="wire-avatar" /><div className="wire-garment" /><div className="wire-layers"><span /><span /><span /><span /></div></div><div className="canvas-ui"><span className="ui-line long" /><span className="ui-line" /><span className="ui-line medium" /><span className="ui-pill" /><span className="ui-pill" /><span className="ui-card" /><span className="ui-card short" /></div><div className="canvas-title">{screen[1]}<small>{screen[3]}</small></div></>}{selected === 19 && <div className="canvas-form"><span className="ui-line long" /><span className="form-line" /><span className="form-line" /><span className="form-line" /><span className="form-button">JOIN ARTIFEX WAITLIST <ArrowUpRight size={14} /></span></div>}<div className="canvas-bottom"><span>{mode === "guided" ? "GUIDED / CONCEPTUAL VISUAL SIMULATION" : "EXPLORE / CURATED SIMULATION"}</span><span>{screen[3]}</span></div></div><div className="wireframe-explain"><div><span>WHAT HAPPENS</span><p>{screen[3]}</p></div><div><span>VISITOR ACTION</span><p>{selected === 19 ? "Complete name, email, company, role, and optional reason for interest." : selected === 0 ? "Scroll into the guided story or enter the designer simulation." : mode === "guided" ? "Scroll to continue, or select this screen to inspect its state." : "Click around the curated controls, then return to the story."}</p></div><div><span>STATE</span><p>{selected < 19 ? "Pre-simulated visual state" : "Conversion state"}</p></div></div></div>
+        <aside className="wireframe-index"><div className="wireframe-index-title"><span>SCREEN MAP</span><small>{String(selected + 1).padStart(2, "0")} / {storyboardScreens.length} selected</small></div>{storyboardScreens.map((item, index) => <button key={`${item[0]}-${item[1]}`} className={index === selected ? "map-item active" : "map-item"} onClick={() => setSelected(index)}><span>{item[0]}</span><b>{item[1]}</b><small>{item[2]}</small></button>)}</aside>
+        <div className={`wireframe-detail mode-${mode}`}><div className="wireframe-detail-head"><div><span className="chapter-kicker">{screen[0]} / {screen[1]}</span><h2>{screen[2]}</h2></div><div className="wireframe-arrow"><button onClick={() => setSelected(Math.max(0, selected - 1))} disabled={!selected}><ChevronLeft size={17} /></button><button onClick={() => setSelected(Math.min(storyboardScreens.length - 1, selected + 1))} disabled={selected === storyboardScreens.length - 1}><ChevronRight size={17} /></button></div></div><div className={`wireframe-canvas canvas-${selected + 1}`}><div className="canvas-top"><span>ARTIFEX / {screen[0]}</span><span>{screen[1].toUpperCase()}</span></div><div className="canvas-grid" />{selected === 0 && <><div className="canvas-headline">CREATIVE ENGINEERING<br /><em>FOR FASHION</em></div><div className="canvas-garment"><Garment mode="mini" /></div><div className="canvas-annotation annotation-a">SKETCH → 3D <i>01</i></div><div className="canvas-annotation annotation-b">PATTERN DETACH <i>02</i></div></>}{selected > 0 && selected < storyboardScreens.length - 1 && <><div className="canvas-wire-object"><div className="wire-avatar" /><div className="wire-garment" /><div className="wire-layers"><span /><span /><span /><span /></div></div><div className="canvas-ui"><span className="ui-line long" /><span className="ui-line" /><span className="ui-line medium" /><span className="ui-pill" /><span className="ui-pill" /><span className="ui-card" /><span className="ui-card short" /></div><div className="canvas-title">{screen[1]}<small>{screen[3]}</small></div></>}{selected === storyboardScreens.length - 1 && <div className="canvas-form"><span className="ui-line long" /><span className="form-line" /><span className="form-line" /><span className="form-line" /><span className="form-button">JOIN ARTIFEX WAITLIST <ArrowUpRight size={14} /></span></div>}<div className="canvas-bottom"><span>{mode === "guided" ? "GUIDED / CONCEPTUAL VISUAL SIMULATION" : "EXPLORE / CURATED SIMULATION"}</span><span>{screen[3]}</span></div></div><div className="wireframe-explain"><div><span>WHAT HAPPENS</span><p>{screen[3]}</p></div><div><span>VISITOR ACTION</span><p>{selected === storyboardScreens.length - 1 ? "Complete name, email, company, role, and optional reason for interest." : selected === 0 ? "Watch the sketch become a dimensional digital garment, then enter the product story." : mode === "guided" ? "Scroll to continue, or select this screen to inspect its state." : "Click around the curated controls, then return to the story."}</p></div><div><span>STATE</span><p>{selected < storyboardScreens.length - 1 ? "Pre-simulated visual state" : "Conversion state"}</p></div></div></div>
       </section>
     </main>
   );
@@ -138,14 +133,8 @@ function Garment({ mode = "hero", material = "silver", pattern = false }: { mode
   );
 }
 
-function Progress({ step }: { step: DemoStep }) {
-  return (
-    <div className="progress-track">
-      {steps.map((item, index) => (
-        <span key={item} className={index <= steps.indexOf(step) ? "active" : ""} />
-      ))}
-    </div>
-  );
+function TimelineProgress({ active }: { active: number }) {
+  return <div className="progress-track">{journeyChapters.map((item, index) => <span key={item.key} className={index <= active ? "active" : ""} />)}</div>;
 }
 
 function Nav({ view, onView, onJoin, menuOpen, setMenuOpen }: { view: View; onView: (view: View) => void; onJoin: () => void; menuOpen: boolean; setMenuOpen: (value: boolean) => void }) {
@@ -184,6 +173,12 @@ function Waitlist({ compact = false }: { compact?: boolean }) {
       )}
     </div>
   );
+}
+
+function WaitlistModal({ open, onClose }: { open: boolean; onClose: () => void }) {
+  const [submitted, setSubmitted] = useState(false);
+  if (!open) return null;
+  return <div className="waitlist-modal" role="dialog" aria-modal="true" aria-label="Join Artifex waitlist"><button className="modal-backdrop" onClick={onClose} aria-label="Close waitlist" /><div className="waitlist-dialog"><button className="modal-close" onClick={onClose}><X size={18} /></button>{submitted ? <div className="modal-success"><span><Check size={22} /></span><p className="eyebrow">ARTIFEX / EARLY ACCESS</p><h2>You are part of<br /><em>the beginning.</em></h2><p>Thank you. This prototype demonstrates the Artifex product vision; we will share future developments with you.</p><button className="button button-dark" onClick={onClose}>Return to Artifex</button></div> : <><p className="eyebrow"><span className="eyebrow-line" /> Early access</p><h2>Join<br /><em>Artifex.</em></h2><p>Be among the first to experience a connected creative-engineering environment for fashion.</p><form onSubmit={(event) => { event.preventDefault(); setSubmitted(true); }}><label>Name<input required placeholder="Your name" /></label><label>Email<input required type="email" placeholder="you@company.com" /></label><label>Company<input placeholder="Company or label" /></label><label>Role<select defaultValue="Fashion Designer"><option>Fashion Designer</option><option>Technical Designer</option><option>Pattern Maker</option><option>Brand / Label</option><option>Manufacturer</option><option>Student</option><option>Investor</option><option>Technology</option><option>Other</option></select></label><label className="full">What brings you to Artifex? <small>Optional</small><textarea placeholder="Tell us what you would want Artifex to connect." /></label><button className="action-primary full" type="submit">Join Artifex Waitlist <ArrowUpRight size={15} /></button></form><small className="concept-note">Conceptual visual prototype. Your information will be used for Artifex early-access communication.</small></>}</div></div>;
 }
 
 const cinematicChapters = [
@@ -240,45 +235,30 @@ function CinematicScroll({ onJourney }: { onJourney: () => void }) {
 function Landing({ onJourney, onJoin }: { onJourney: () => void; onJoin: () => void }) {
   return (
     <main className="landing-page">
-      <section className="hero-section" id="top">
-        <div className="hero-copy reveal-up">
-          <p className="eyebrow"><span className="eyebrow-line" /> Creative engineering for fashion</p>
-          <h1>From creative<br /><em>intent</em> to<br /><span>production reality.</span></h1>
-          <p className="hero-lede">A conceptual environment for keeping the idea, the garment, and the decisions connected as fashion moves toward making.</p>
-          <div className="hero-actions"><button className="button button-dark" onClick={onJourney}>Explore the designer journey <ArrowUpRight size={17} /></button><a className="text-link" href="#principle">See the principle <ArrowDownRight size={16} /></a></div>
-        </div>
-        <div className="hero-visual reveal-in">
-          <div className="visual-topline"><span>01 / CONCEPT GARMENT</span><span>SCROLL TO ENTER <ChevronDown size={14} /></span></div>
-          <div className="hero-stage-grid" />
-          <Garment mode="hero" />
-          <div className="hero-caption"><span>ARTIFEX / 001</span><span>SCULPTURAL READY-TO-WEAR</span></div>
-          <div className="orbit-label label-one">SILHOUETTE <i>01</i></div><div className="orbit-label label-two">SURFACE <i>02</i></div><div className="orbit-label label-three">CONSTRUCTION <i>03</i></div>
-        </div>
-        <div className="scroll-cue"><span>Scroll to enter</span><ChevronDown size={18} /></div>
+      <section className="master-hero" id="top">
+        <div className="master-hero-stage"><div className="hero-stage-grid" /><Garment mode="hero" pattern /><div className="sketch-echo" /><div className="hero-caption"><span>ARTIFEX / GARMENT 001</span><span>SKETCH → DIMENSIONAL SAMPLE</span></div></div>
+        <div className="master-hero-copy"><p className="eyebrow"><span className="eyebrow-line" /> Creative engineering for fashion</p><h1>From creative intent<br />to <em>engineered reality.</em></h1><p>An idea is only the beginning.</p><div className="hero-actions"><button className="button button-dark" onClick={onJourney}>Experience Artifex <ArrowUpRight size={17} /></button><button className="button button-outline" onClick={onJoin}>Join waitlist</button></div></div>
+        <a className="master-scroll" href="#garment-system">Scroll to enter <ChevronDown size={16} /></a>
+      </section>
+
+      <section className="garment-system-section dark-section" id="garment-system">
+        <div className="section-meta"><span>02 / THE GARMENT</span><span>MORE THAN AN IMAGE</span></div>
+        <div className="garment-system-layout"><div className="system-words"><h2>A garment is<br /><em>not a file.</em></h2>{["Creative intent","Geometry","Fit","Material","Construction","Cost","Supply","Production","Evidence","History"].map((item, i) => <span style={{ animationDelay: `${i*.08}s` }} key={item}>{item}.</span>)}</div><div className="system-garment"><Garment mode="studio" material="silver" pattern /><div className="system-labels"><span>GEOMETRY</span><span>FIT</span><span>MATERIAL</span><span>CONSTRUCTION</span><span>COST</span><span>HISTORY</span></div></div></div>
       </section>
 
       <section className="friction-section dark-section">
-        <div className="section-meta"><span>01 / THE PROBLEM</span><span>FRAGMENTED TRANSLATION</span></div>
+        <div className="section-meta"><span>03 / THE INDUSTRY PROBLEM</span><span>FRAGMENTED TRANSLATION</span></div>
         <div className="friction-layout">
-          <div><p className="eyebrow muted"><span className="eyebrow-line" /> The garment gets translated</p><h2>Too many<br /><em>times.</em></h2></div>
-          <div className="fragment-story"><div className="fragment-core"><div className="fragment-glyph">◌</div><span>one garment</span></div><div className="fragment-row"><div className="fragment-card">SKETCH <small>creative intent</small></div><div className="fragment-card">3D <small>form study</small></div><div className="fragment-card">PATTERN <small>geometry</small></div><div className="fragment-card">TECH PACK <small>production</small></div></div><p className="fragment-note">The same product is repeatedly re-entered, reinterpreted, and disconnected across tools, teams, and files.</p></div>
+          <div><p className="eyebrow muted"><span className="eyebrow-line" /> Every decision lives somewhere else</p><h2>Fashion development<br /><em>is fragmented.</em></h2></div>
+          <div className="fragment-story"><div className="fragment-core"><div className="fragment-glyph">◌</div><span>one garment</span></div><div className="fragment-cloud">{["Sketch.ai","Pattern_v7.dxf","FIT_NOTES_FINAL2.pdf","costing.xlsx","WhatsApp","email","material.xls","BOM_final.pdf","Factory comments","Sample 04"].map((item)=><span key={item}>{item}</span>)}</div><p className="fragment-note">What if the garment itself became the system?</p></div>
         </div>
       </section>
 
       <section className="principle-section" id="principle">
-        <div className="section-meta"><span>02 / THE ARTIFEX PRINCIPLE</span><span>ONE EVOLVING PRODUCT STATE</span></div>
-        <div className="principle-header"><p className="eyebrow"><span className="eyebrow-line" /> The garment is the unit of work</p><h2>One garment.<br /><em>One evolving</em><br />product state.</h2></div>
-        <div className="principle-visual"><div className="principle-ring ring-outer" /><div className="principle-ring ring-inner" /><div className="principle-core"><Garment mode="mini" material="ink" /><span className="core-label">ARTIFEX<br /><small>PRODUCT STATE</small></span></div><div className="node node-fit"><span>FIT</span><small>body + ease</small></div><div className="node node-material"><span>MATERIAL</span><small>surface + drape</small></div><div className="node node-pattern"><span>PATTERN</span><small>geometry</small></div><div className="node node-docs"><span>DOCUMENTATION</span><small>living output</small></div></div>
-        <div className="principle-foot"><p>Every view stays connected to the same evolving product — not a new translation.</p><button className="button button-outline" onClick={onJourney}>Enter the journey <ArrowRight size={16} /></button></div>
-      </section>
-
-      <CinematicScroll onJourney={onJourney} />
-
-      <section className="capability-section">
-        <div className="section-meta"><span>04 / CONNECTED BY DESIGN</span><span>VISUAL CONCEPT</span></div>
-        <div className="capability-grid">
-          {[{icon: <ScanLine size={22} />, title: "Fit", body: "Define the intended body and silhouette."}, {icon: <Sparkles size={22} />, title: "Materials", body: "Explore how fabric direction influences the piece."}, {icon: <Layers3 size={22} />, title: "Pattern", body: "See geometry as a living part of the same product."}].map((item) => <div className="capability-card" key={item.title}><span className="capability-icon">{item.icon}</span><h3>{item.title}</h3><p>{item.body}</p><ArrowUpRight className="card-arrow" size={18} /></div>)}
-        </div>
+        <div className="section-meta"><span>04 / THE PRODUCT GRAPH</span><span>THE GARMENT BECOMES THE SYSTEM</span></div>
+        <div className="principle-header"><p className="eyebrow"><span className="eyebrow-line" /> Continuity across every decision</p><h2>What if the garment<br /><em>became the system?</em></h2></div>
+        <div className="principle-visual graph-expanded"><div className="principle-ring ring-outer" /><div className="principle-ring ring-inner" /><div className="principle-core"><Garment mode="mini" material="ink" /><span className="core-label">GARMENT<br /><small>PRODUCT GRAPH</small></span></div><div className="node node-intent"><span>CREATIVE INTENT</span><small>origin</small></div><div className="node node-fit"><span>FIT / SIZING</span><small>body + ease</small></div><div className="node node-material"><span>MATERIAL / SUPPLY</span><small>drape + sourcing</small></div><div className="node node-pattern"><span>GEOMETRY</span><small>pattern + construction</small></div><div className="node node-docs"><span>PRODUCTION</span><small>quality + documentation</small></div></div>
+        <div className="principle-foot"><p>Hover a node to understand what changes with it. Then step through the garment into Artifex.</p><button className="button button-dark" onClick={onJourney}>Enter Artifex <ArrowRight size={16} /></button></div>
       </section>
 
       <section className="position-section dark-section" id="position">
@@ -301,39 +281,104 @@ function Landing({ onJourney, onJoin }: { onJourney: () => void; onJoin: () => v
 }
 
 function Journey({ onBack, onJoin }: { onBack: () => void; onJoin: () => void }) {
-  const [step, setStep] = useState<DemoStep>("intent");
+  const [active, setActive] = useState(0);
+  const [mode, setMode] = useState<"guided" | "explore">("guided");
   const [material, setMaterial] = useState("silver");
   const [rotation, setRotation] = useState(0);
-  const [approved, setApproved] = useState(false);
-  const current = stepMeta[step];
-  const index = steps.indexOf(step);
-  const materialLabel = useMemo(() => ({ silver: "reflective silver", matte: "powder matte", acid: "acid textile" }[material] ?? material), [material]);
-
+  const [size, setSize] = useState(10);
+  const [pattern, setPattern] = useState("B");
+  const [optimise, setOptimise] = useState("Fit");
+  const [xray, setXray] = useState(58);
+  const [colour, setColour] = useState("obsidian");
+  const [productionOptimised, setProductionOptimised] = useState(false);
+  const [role, setRole] = useState("Technical Designer");
+  const [released, setReleased] = useState(false);
+  const [autonomy, setAutonomy] = useState("Suggest");
+  const dragging = useRef(false);
+  const chapter = journeyChapters[active];
+  const key = chapter.key as JourneyKey;
+  const materialForStage = key === "textile" || key === "propagation" ? material : key === "surface" ? colour : key === "creative" ? "ink" : "silver";
+  const recommendation = optimise === "Fit" ? "B" : optimise === "Creative intent" ? "C" : "A";
+  const go = (next: number) => {
+    const target = Math.max(0, Math.min(journeyChapters.length - 1, next));
+    setActive(target);
+    const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
+    window.scrollTo({ top: (target / (journeyChapters.length - 1)) * maxScroll, behavior: "smooth" });
+  };
+  useEffect(() => {
+    const updateFromScroll = () => {
+      const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
+      if (maxScroll <= 0) return;
+      const next = Math.round((window.scrollY / maxScroll) * (journeyChapters.length - 1));
+      setActive(Math.max(0, Math.min(journeyChapters.length - 1, next)));
+    };
+    window.addEventListener("scroll", updateFromScroll, { passive: true });
+    return () => window.removeEventListener("scroll", updateFromScroll);
+  }, []);
   return (
-    <main className="journey-page">
-      <div className="journey-topbar"><button className="back-link" onClick={onBack}><ArrowLeft size={16} /> Back to overview</button><span className="journey-label">ARTIFEX / DESIGNER JOURNEY</span><button className="journey-join" onClick={onJoin}>Join early access <ArrowUpRight size={15} /></button></div>
-      <div className="journey-progress"><span>{current.number} / 06</span><Progress step={step} /><span className="progress-name">{current.kicker}</span></div>
-      <section className="journey-hero">
-        <div className="journey-copy"><p className="eyebrow"><span className="eyebrow-line" /> {current.kicker}</p><h1>{current.title}</h1><p>{current.body}</p><div className="journey-stepper"><button onClick={() => setStep(steps[Math.max(0, index - 1)])} disabled={index === 0}><ChevronLeft size={17} /></button><span>{current.number} / 06</span><button onClick={() => setStep(steps[Math.min(steps.length - 1, index + 1)])} disabled={index === steps.length - 1}><ChevronRight size={17} /></button></div></div>
-        <div className={`journey-stage stage-${step}`} style={{ transform: `rotateY(${rotation}deg)` }}>
-          <div className="stage-grid" />
-          <Garment mode="studio" material={material} pattern={step === "pattern"} />
-          <div className="stage-index">{current.number}</div>
-          {step === "impact" && <div className="impact-lines"><span /><span /><span /><span /></div>}
-          {step === "pattern" && <div className="pattern-tag"><Layers3 size={15} /> connected pattern view</div>}
-          {step === "approve" && <div className={`approval-card ${approved ? "approved" : ""}`}><span>{approved ? <Check size={14} /> : <MousePointer2 size={14} />}</span>{approved ? "Concept accepted" : "Proposed change"}</div>}
+    <main className={`journey-page immersive-journey env-${key}`}>
+      <div className="immersive-sticky-shell">
+      <div className="journey-topbar immersive-topbar"><button className="back-link" onClick={onBack}><ArrowLeft size={16} /> Leave Artifex</button><span className="journey-label">ARTIFEX &nbsp; AW27 / LOOK 07</span><div className="autonomous-status"><span /> Autonomous</div><button className="journey-join" onClick={onJoin}>Join waitlist <ArrowUpRight size={15} /></button></div>
+      <div className="product-tabs"><span className={chapter.phase === "Creative" ? "active" : ""}>Creative</span><span className={chapter.phase === "Engineering" ? "active" : ""}>Engineering</span><span className={chapter.phase === "Materials" ? "active" : ""}>Materials</span><span className={chapter.phase === "Production" ? "active" : ""}>Production</span><span className={chapter.phase === "Release" ? "active" : ""}>Release</span><div className="journey-mode"><button className={mode === "guided" ? "active" : ""} onClick={() => setMode("guided")}>● Journey</button><button className={mode === "explore" ? "active" : ""} onClick={() => setMode("explore")}>○ Explore</button></div></div>
+      <div className="immersive-progress"><span>{String(active + 1).padStart(2, "0")} / 22</span><TimelineProgress active={active} /><span>{chapter.environment}</span></div>
+      <section className="immersive-layout">
+        <aside className="story-panel"><p className="eyebrow"><span className="eyebrow-line" /> {chapter.phase} / {chapter.environment}</p><h1>{chapter.title}</h1><p>{chapter.body}</p><div className="causal-line"><span>PRODUCT STATE</span><b>Garment / 001</b><small>{active === 0 ? "creative intent created" : `${journeyChapters[active - 1].key} → ${chapter.key}`}</small></div><div className="journey-stepper"><button onClick={() => go(active - 1)} disabled={!active}><ChevronLeft size={17} /></button><span>{String(active + 1).padStart(2, "0")} / 22</span><button onClick={() => go(active + 1)} disabled={active === journeyChapters.length - 1}><ChevronRight size={17} /></button></div></aside>
+
+        <div className="persistent-stage" onPointerDown={(e) => { dragging.current = true; (e.currentTarget as HTMLElement).setPointerCapture(e.pointerId); }} onPointerMove={(e) => { if (dragging.current) setRotation((r) => r + e.movementX * .45); }} onPointerUp={() => { dragging.current = false; }}>
+          <div className="stage-grid" /><div className="runway-floor" /><div className="garment-rotator" style={{ transform: `translate(-50%, -50%) rotateY(${rotation}deg) scale(${key === "fit" ? .82 + (size - 6) * .012 : 1})` }}><Garment mode="studio" material={materialForStage} pattern={key === "pattern" || key === "production"} /></div><div className="stage-identity"><span>GARMENT / 001</span><span>drag to rotate ↔</span></div>
+          {key === "creative" && <div className="creative-board"><span className="board-card mood">MOODBOARD<small>volume / tension</small></span><span className="board-card sketch">DESIGN SKETCH<small>asymmetric drape</small></span><span className="board-card intent">CREATIVE INTENT<small>sculptural · soft structure</small></span></div>}
+          {key === "understanding" && <div className="garment-callouts"><button>Structured bodice</button><button>Asymmetric drape</button><button>High-tension waist</button><button>Soft volume</button><button>Hidden closure</button></div>}
+          {key === "versions" && <div className="version-fan"><span>creative-direction</span><span>fit-experiment</span><span>production-safe</span></div>}
+          {key === "fit" && <><div className="avatar-sizes"><span>06</span><span>08</span><span className="active">{size}</span><span>12</span><span>14</span></div><div className="fit-alert">FIT INCONSISTENCY / SIZES 12–14</div></>}
+          {key === "engineering" && <div className="constraint-hud"><span>FIT ISSUE<b>Back waist excess</b></span><span>CREATIVE CONSTRAINTS<b>Preserve silhouette / drape / waist</b></span><span>ENGINEERING CONSTRAINTS<b>Ease / stretch / tolerance</b></span></div>}
+          {key === "pattern" && <div className="pattern-alternatives">{["A","B","C"].map((item) => <button key={item} className={pattern === item ? "active" : ""} onClick={() => setPattern(item)}><span>{item}</span><i>Alternative {item}</i><small>{item === "A" ? "side seam redistribution" : item === "B" ? "panel redistribution" : "suppression rebalance"}</small></button>)}</div>}
+          {key === "impact" && <div className="recommendation"><span>RECOMMENDED FOR {optimise.toUpperCase()}</span><b>ALTERNATIVE {recommendation}</b><small>Same creative concept. Different engineered reality.</small></div>}
+          {key === "construction" && <div className="assembly-sequence">{["Bodice shell","Structural reinforcement","Side assembly","Waist join","Draped panel","Closure","Lining","Finish"].map((item, i) => <span className={i === 4 ? "active" : ""} key={item}>{String(i + 1).padStart(2,"0")} {item}</span>)}</div>}
+          {key === "materials" && <div className="material-orbit"><span>SHELL<small>Silk-viscose</small></span><span>LINING<small>Cupro</small></span><span>INTERFACING<small>Light fusible</small></span><span>TRIM<small>Metal hardware</small></span></div>}
+          {key === "textile" && <div className="textile-twin"><div><Garment mode="mini" material="silver" /><span>SILK VISCOSE<small>soft drape / 2.8m</small></span></div><div><Garment mode="mini" material="matte" /><span>WOOL CREPE<small>more structure / 3.0m</small></span></div></div>}
+          {key === "propagation" && <div className="propagation-chain">{["MATERIAL","DRAPE","FIT","PATTERN","CONSUMPTION","COST","CONSTRUCTION","DOCUMENTATION"].map((item, i) => <span style={{ animationDelay: `${i * .12}s` }} key={item}>{item}</span>)}</div>}
+          {key === "surface" && <div className="runway-title">COLOURWAY / {colour.toUpperCase()}</div>}
+          {key === "xray" && <><div className="xray-cut" style={{ width: `${xray}%` }} /><div className="xray-label">FASHION ← {xray}% → ENGINEERING</div></>}
+          {key === "production" && <div className={`marker-layout ${productionOptimised ? "optimised" : ""}`}><span /><span /><span /><span /><span /><b>{productionOptimised ? "88.4%" : "72.8%"}<small>UTILISATION</small></b></div>}
+          {key === "bom" && <div className="document-cloud"><span>TECHNICAL FLATS</span><span>MEASUREMENTS</span><span>GRADING</span><span>LIVE BOM</span><span>CONSTRUCTION</span><span>QC</span></div>}
+          {key === "sampling" && <div className="sample-timeline"><span>PROTO</span><span className="active">FIT<small>waist drag lines</small></span><span>REVISED</span><span>SIZE SET</span><span>PRE-PRODUCTION</span></div>}
+          {key === "sourcing" && <div className="supplier-cards"><span>A<small>$18.40/m · 18 days · low risk</small></span><span className="active">B<small>$16.70/m · 37 days · medium risk</small></span><span>C<small>$20.10/m · 11 days · low risk</small></span></div>}
+          {key === "costing" && <div className="cost-cloud"><span>Fabric <b>$52.88</b></span><span>Lining <b>$7.60</b></span><span>Trim <b>$8.20</b></span><span>Labour <b>$34.00</b></span><strong>LANDED COST<br />$120.28</strong></div>}
+          {key === "release" && <div className={`release-stamp ${released ? "released" : ""}`}><b>{released ? "PRODUCTION READY" : "94% PRODUCTION READY"}</b><span>{released ? "Released by Production Approver" : "Factory approval required"}</span></div>}
+          {key === "mission" && <div className="collection-grid">{Array.from({ length: 18 }).map((_, i) => <span className={i === 7 ? "active" : i % 7 === 0 ? "risk" : ""} key={i}>{String(i + 1).padStart(2,"0")}</span>)}</div>}
+          {key === "knowledge" && <div className="knowledge-web"><span>SEAM</span><span>CONSTRUCTION</span><span>MATERIAL</span><span>FIT</span><span>HISTORY</span><span>QC</span></div>}
+          {key === "autonomy" && <div className="autonomy-log"><b>{autonomy.toUpperCase()} MODE</b>{["Fit issue detected","Alternatives generated","Policy checked","Pattern updated","Simulation rerun","Documentation updated","Evidence recorded"].map((item, i) => <span style={{ animationDelay: `${i * .13}s` }} key={item}><Check size={11} /> {item}</span>)}</div>}
         </div>
-        <div className="journey-controls">
-          {step === "material" && <div className="control-block"><span>Material direction</span><div className="choice-row"><button className={material === "silver" ? "selected" : ""} onClick={() => setMaterial("silver")}><i className="swatch silver" /> Reflective</button><button className={material === "matte" ? "selected" : ""} onClick={() => setMaterial("matte")}><i className="swatch matte" /> Matte</button><button className={material === "acid" ? "selected" : ""} onClick={() => setMaterial("acid")}><i className="swatch acid" /> Acid</button></div><small>Selected concept: {materialLabel}</small></div>}
-          {step === "form" && <div className="control-block"><span>Explore the garment</span><button className="rotate-control" onClick={() => setRotation((value) => value + 45)}><Move3d size={15} /> Rotate 45°</button><small>Drag or tap to rotate the concept.</small></div>}
-          {step === "impact" && <div className="control-block"><span>Select a decision</span><div className="choice-row"><button className="selected"><i className="signal-dot green" /> Material</button><button><i className="signal-dot blue" /> Fit</button><button><i className="signal-dot pink" /> Silhouette</button></div><small>Conceptual impact view across the product state.</small></div>}
-          {step === "approve" && <div className="control-block"><span>Review the proposed direction</span><div className="choice-row"><button className={approved ? "selected" : ""} onClick={() => setApproved(true)}><Check size={14} /> Accept concept</button><button onClick={() => setApproved(false)}>Keep original</button></div><small>{approved ? "Your decision becomes part of the evolving product state." : "The original direction remains the source of truth."}</small></div>}
-          {!(["material", "form", "impact", "approve"] as DemoStep[]).includes(step) && <div className="control-block"><span>Continue the visual story</span><small>Scroll the chapters with the arrows below.</small></div>}
-          <button className="next-control" onClick={() => index === steps.length - 1 ? onJoin() : setStep(steps[index + 1])}>{index === steps.length - 1 ? "Join early access" : "Continue"} <ArrowUpRight size={16} /></button>
-        </div>
+
+        <aside className="action-panel">
+          <span className="panel-label">DATA / ACTION</span>
+          {key === "creative" && <><h3>Creative intent</h3><p>Sculptural<br />Asymmetrical<br />Controlled drape<br />Soft structure</p><button className="action-primary" onClick={() => go(1)}>Interpret design <ArrowRight size={14} /></button></>}
+          {key === "understanding" && <><h3>Garment reading</h3><p>Click a callout to see how intent connects to geometry and material behaviour.</p><button className="action-primary" onClick={() => go(2)}>Continue <ArrowRight size={14} /></button></>}
+          {key === "versions" && <><h3>Repository</h3><p>MAIN / creative-direction / fit-experiment / production-safe</p><button className="action-primary">Compare versions</button></>}
+          {key === "fit" && <><h3>Size scrubber</h3><input className="range-control" type="range" min="6" max="14" step="2" value={size} onChange={(e) => setSize(Number(e.target.value))} /><p>Selected size: {size}<br />Fit map: tension / excess / distance</p><button className="action-primary" onClick={() => go(4)}>Engineer solution</button></>}
+          {key === "engineering" && <><h3>Generate alternatives</h3><p>Preserve creative intent while resolving back-waist excess.</p><button className="action-primary" onClick={() => go(5)}>Generate 3 options</button></>}
+          {key === "pattern" && <><h3>Pattern engineering</h3><p>Selected: Alternative {pattern}</p><div className="metric-mini"><span>Fit {pattern === "B" ? "98" : pattern === "A" ? "96" : "94"}</span><span>Intent {pattern === "C" ? "100" : pattern === "A" ? "99" : "95"}</span><span>Risk {pattern === "B" ? "Medium" : "Low"}</span></div><button className="action-primary" onClick={() => go(6)}>Open Impact Lens</button></>}
+          {key === "impact" && <><h3>Optimise for</h3><div className="vertical-options">{["Creative intent","Fit","Cost","Waste","Production"].map((item) => <button className={optimise === item ? "active" : ""} onClick={() => setOptimise(item)} key={item}>{item}<span>{optimise === item ? "recommended" : ""}</span></button>)}</div><p>Recommended: Alternative {recommendation}</p></>}
+          {key === "construction" && <><h3>Assembly</h3><p>Step 05 / Draped panel highlighted. Surface is translucent to reveal construction relationships.</p><button className="action-primary" onClick={() => go(8)}>Assign materials</button></>}
+          {key === "materials" && <><h3>Components</h3><p>Shell / lining / interfacing / zipper / thread / trim</p><button className="action-primary" onClick={() => go(9)}>Open textile twin</button></>}
+          {key === "textile" && <><h3>Simulate materials</h3><div className="choice-row"><button className={material === "silver" ? "selected" : ""} onClick={() => setMaterial("silver")}>Silk</button><button className={material === "matte" ? "selected" : ""} onClick={() => setMaterial("matte")}>Wool</button></div><p>Pattern correction: {material === "matte" ? "Required" : "—"}</p><button className="action-primary" onClick={() => { setMaterial("matte"); go(10); }}>Choose wool</button></>}
+          {key === "propagation" && <><h3>Downstream impact</h3><p>Material → drape → fit → pattern → consumption → cost → construction → documents</p><button className="action-primary" onClick={() => go(11)}>Continue with change</button></>}
+          {key === "surface" && <><h3>Colourways</h3><div className="colour-options">{["obsidian","ivory","oxblood","midnight"].map((item) => <button aria-label={item} className={`${item} ${colour === item ? "active" : ""}`} onClick={() => setColour(item)} key={item} />)}</div><p>Finish / embroidery / placement artwork / embellishment</p></>}
+          {key === "xray" && <><h3>X-ray</h3><input className="range-control" type="range" min="0" max="100" value={xray} onChange={(e) => setXray(Number(e.target.value))} /><p>Surface / shell / interfacing / structure / lining / seams / pattern / body</p></>}
+          {key === "production" && <><h3>Marker efficiency</h3><p>{productionOptimised ? "Fabric −0.31m / Waste −15.6% / Cost −$4.82" : "Current utilisation 72.8%"}</p><button className="action-primary" onClick={() => setProductionOptimised(true)}>{productionOptimised ? "Optimised / 88.4%" : "Optimise"}</button></>}
+          {key === "bom" && <><h3>Live BOM</h3><p>Shell 2.41m<br />Lining 1.33m<br />Interfacing 0.44m<br />Invisible zipper 1</p><button className="action-primary">Generate documentation</button></>}
+          {key === "sampling" && <><h3>Physical evidence</h3><p>Waist drag lines detected → observation → digital garment → pattern → correction.</p><button className="action-primary" onClick={() => go(16)}>Apply correction</button></>}
+          {key === "sourcing" && <><h3>Supplier B selected</h3><p>Cost ↓ / Lead time ↑ / MOQ ↑ / Risk ↑</p><button className="action-primary">Maintain change?</button></>}
+          {key === "costing" && <><h3>Production volume</h3><div className="choice-row"><button>1K</button><button>5K</button><button className="selected">10K</button><button>50K</button></div><p>Pattern optimisation saved $4.82 per garment in this illustrative state.</p></>}
+          {key === "release" && <><h3>Approval + release</h3><select value={role} onChange={(e) => setRole(e.target.value)}><option>Technical Designer</option><option>Production Approver</option></select><button className="action-primary" disabled={role !== "Production Approver"} onClick={() => setReleased(true)}>Release to production</button></>}
+          {key === "mission" && <><h3>AW27 collection</h3><p>42 products<br />31 production ready<br />6 engineering<br />3 review<br />2 at risk</p><button className="action-primary">Return to garment 08</button></>}
+          {key === "knowledge" && <><h3>Institutional knowledge</h3><p>Construction / material requirements / manufacturing constraints / historic decisions / fit / QC</p><button className="action-primary" onClick={() => go(21)}>Ask Artifex</button></>}
+          {key === "autonomy" && <><h3>Autonomy mode</h3><div className="choice-row">{["Observe","Suggest","Execute"].map((item) => <button className={autonomy === item ? "selected" : ""} onClick={() => setAutonomy(item)} key={item}>{item}</button>)}</div><p>Every proposed or executed change is tied to evidence, rules, impact, and confidence.</p><button className="action-primary">View evidence</button></>}
+          <button className="next-control" onClick={() => active === journeyChapters.length - 1 ? onJoin() : go(active + 1)}>{active === journeyChapters.length - 1 ? "Finish journey" : "Continue"}<ArrowUpRight size={16} /></button>
+        </aside>
       </section>
-      <section className="journey-chapters"><div className="chapter-list">{steps.map((item) => <button key={item} className={item === step ? "chapter active" : "chapter"} onClick={() => setStep(item)}><span>{stepMeta[item].number}</span><b>{stepMeta[item].kicker}</b><small>{stepMeta[item].title}</small></button>)}</div><div className="journey-footnote"><Sparkles size={16} /><span>All displayed capabilities are conceptual visual demonstrations.</span></div></section>
-      <section className="journey-cta"><p className="eyebrow"><span className="eyebrow-line" /> The continuous product state</p><h2>From idea to<br /><em>evolving product.</em></h2><Waitlist compact /></section>
+      <section className="immersive-timeline"><div className="timeline-scroller">{journeyChapters.map((item, index) => <button key={item.key} className={index === active ? "active" : ""} onClick={() => go(index)}><span>{String(index + 1).padStart(2,"0")}</span><b>{item.key}</b></button>)}</div><div className="journey-footnote"><Sparkles size={16} /><span>Curated concept simulation. The same garment persists across every state.</span></div></section>
+      </div>
     </main>
   );
 }
@@ -341,8 +386,8 @@ function Journey({ onBack, onJoin }: { onBack: () => void; onJoin: () => void })
 export default function Home() {
   const [view, setView] = useState<View>("landing");
   const [menuOpen, setMenuOpen] = useState(false);
-  const joinRef = useRef<HTMLDivElement>(null);
+  const [waitlistOpen, setWaitlistOpen] = useState(false);
   useEffect(() => { document.title = "Artifex — Creative Engineering for Fashion"; }, []);
-  const goJoin = () => { setView("landing"); window.setTimeout(() => document.getElementById("join")?.scrollIntoView({ behavior: "smooth" }), 50); };
-  return <div className="app-shell"><Nav view={view} onView={setView} onJoin={goJoin} menuOpen={menuOpen} setMenuOpen={setMenuOpen} />{view === "landing" ? <Landing onJourney={() => { setView("journey"); window.scrollTo({ top: 0, behavior: "smooth" }); }} onJoin={goJoin} /> : view === "journey" ? <Journey onBack={() => { setView("landing"); window.scrollTo({ top: 0, behavior: "smooth" }); }} onJoin={goJoin} /> : <WireframeMap onBack={() => { setView("landing"); window.scrollTo({ top: 0, behavior: "smooth" }); }} onJourney={() => { setView("journey"); window.scrollTo({ top: 0, behavior: "smooth" }); }} onJoin={goJoin} />}</div>;
+  const goJoin = () => setWaitlistOpen(true);
+  return <div className="app-shell"><Nav view={view} onView={setView} onJoin={goJoin} menuOpen={menuOpen} setMenuOpen={setMenuOpen} />{view === "landing" ? <Landing onJourney={() => { setView("journey"); window.scrollTo({ top: 0, behavior: "smooth" }); }} onJoin={goJoin} /> : view === "journey" ? <Journey onBack={() => { setView("landing"); window.scrollTo({ top: 0, behavior: "smooth" }); }} onJoin={goJoin} /> : <WireframeMap onBack={() => { setView("landing"); window.scrollTo({ top: 0, behavior: "smooth" }); }} onJourney={() => { setView("journey"); window.scrollTo({ top: 0, behavior: "smooth" }); }} onJoin={goJoin} />}<WaitlistModal open={waitlistOpen} onClose={() => setWaitlistOpen(false)} /></div>;
 }
