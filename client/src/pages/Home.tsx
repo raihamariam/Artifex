@@ -193,11 +193,15 @@ function Garment({ mode = "hero", material = "silver", pattern = false }: { mode
 }
 
 function ProductGraphScene() {
+  const [rotation, setRotation] = useState(0);
+  const [hovered, setHovered] = useState("");
+  const dragging = useRef(false);
+  const lastX = useRef(0);
   const nodes = [
     ["creative", "CREATIVE", "Creative intent"], ["fit", "FIT", "Body + ease"], ["pattern", "PATTERN", "Geometry"], ["material", "MATERIAL", "Drape + supply"], ["production", "PRODUCTION", "Quality + output"],
     ["documentation", "DOCUMENTATION", "Living tech pack"], ["evidence", "EVIDENCE", "Sample feedback"], ["knowledge", "KNOWLEDGE", "Compounding history"], ["community", "COMMUNITY", "Shared lineage"], ["history", "HISTORY", "Version truth"],
   ];
-  return <div className="product-graph-scene" aria-label="Animated one-garment product graph"><div className="product-graph-grid" /><div className="product-graph-ambient" /><div className="product-graph-garment"><Garment mode="studio" material="silver" /></div><div className="product-graph-badge">ONE<br />GARMENT</div><div className="product-graph-connectors">{nodes.map(([key]) => <span className={`graph-connector connector-${key}`} key={key} />)}</div><div className="product-graph-nodes">{nodes.map(([key, label, sub]) => <button className={`product-graph-node graph-node-${key}`} key={key}><i />{label}<small>{sub}</small></button>)}</div><div className="product-graph-caption"><span>GARMENT / 001</span><span>DRAG TO ROTATE ↔</span></div></div>;
+  return <div className="product-graph-scene" aria-label="Animated one-garment product graph" onPointerDown={(event) => { dragging.current = true; lastX.current = event.clientX; event.currentTarget.setPointerCapture(event.pointerId); }} onPointerMove={(event) => { if (!dragging.current) return; setRotation((value) => value + (event.clientX - lastX.current) * .6); lastX.current = event.clientX; }} onPointerUp={() => { dragging.current = false; }} onPointerCancel={() => { dragging.current = false; }}><div className="product-graph-grid" /><div className="product-graph-ambient" /><div className="product-graph-garment" style={{ transform: `translate(-50%,-50%) scale(.92) rotateY(${rotation}deg)` }}><Garment mode="studio" material="silver" /></div><div className="product-graph-badge">ONE<br />GARMENT</div><div className="product-graph-connectors">{nodes.map(([key]) => <span className={`graph-connector connector-${key}`} key={key} />)}</div><div className="product-graph-nodes">{nodes.map(([key, label, sub]) => <button type="button" aria-label={`${label}: ${sub}`} onPointerDown={(event) => event.stopPropagation()} onPointerEnter={() => setHovered(key)} onPointerLeave={() => setHovered("")} className={`product-graph-node graph-node-${key} ${hovered === key ? "is-hovered" : ""}`} key={key}><i />{label}<small>{sub}</small></button>)}</div><div className="product-graph-caption"><span>GARMENT / 001</span><span>DRAG TO ROTATE ↔</span></div></div>;
 }
 
 function TimelineProgress({ active, total = journeyChapters.length }: { active: number; total?: number }) {

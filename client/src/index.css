@@ -451,3 +451,6 @@ h1, h2, h3, p { margin-top: 0; }
 /* Visual edit correction: create clear separation below the Product Graph heading. */
 .principle-visual.graph-expanded{margin-top:42px}
 @media(max-width:720px){.principle-visual.graph-expanded{margin-top:24px}}
+
+/* Product Graph interaction fix: pointer-safe drag surface and explicit node hover state. */
+.product-graph-scene{touch-action:none;cursor:grab}.product-graph-scene:active{cursor:grabbing}.product-graph-node{z-index:20;pointer-events:auto}.product-graph-node.is-hovered{transform:translateY(-6px) scale(1.04);border-color:var(--acid);color:var(--acid);background:rgba(30,38,25,.94);box-shadow:0 0 0 1px rgba(185,255,56,.2),0 0 24px rgba(185,255,56,.22)}.product-graph-node.is-hovered i{box-shadow:0 0 18px var(--acid),0 0 0 5px rgba(185,255,56,.22)}.product-graph-garment{will-change:transform}
