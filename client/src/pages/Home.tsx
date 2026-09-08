@@ -18,7 +18,7 @@ import {
   X,
 } from "lucide-react";
 
-type View = "landing" | "journey";
+type View = "landing" | "journey" | "wireframes";
 type DemoStep = "intent" | "material" | "form" | "pattern" | "impact" | "approve";
 
 const stepMeta: Record<DemoStep, { number: string; title: string; kicker: string; body: string }> = {
@@ -61,6 +61,44 @@ const stepMeta: Record<DemoStep, { number: string; title: string; kicker: string
 };
 
 const steps = Object.keys(stepMeta) as DemoStep[];
+
+const storyboardScreens = [
+  ["01", "Investor hero", "From creative intent to production reality", "Hero garment resolves from wireframe to material."],
+  ["02", "Design layer", "Begin with the feeling", "Moodboard signals orbit the avatar and set direction."],
+  ["03", "Garment understanding", "Make the idea legible", "Semantic pins identify volume, surface, and zones."],
+  ["04", "3D garment", "Let the idea hold form", "Avatar rotates through a 360° product view."],
+  ["05", "X-ray mode", "Open the construction", "Surface fades to reveal seams, panels, and supports."],
+  ["06", "Pattern alternatives", "Two ways to engineer one idea", "Pattern pieces unfold into A/B garment states."],
+  ["07", "Fit + grading", "Give the garment a body", "Two avatars show the same garment across size contexts."],
+  ["08", "Material intelligence", "Same design, different behaviour", "Material swap changes surface, drape, and volume."],
+  ["09", "Product graph", "Propagate a decision", "A luminous ripple travels through downstream objects."],
+  ["10", "Impact lens", "See what a decision touches", "Affected objects pulse around the garment."],
+  ["11", "Versioning", "Compare and merge", "Two versions crossfade on the same avatar."],
+  ["12", "Production", "Make the intent manufacturable", "Panels arrange into a production view."],
+  ["13", "Costing", "Connect product and commercial state", "Commercial layers orbit the garment."],
+  ["14", "Sourcing", "Match requirements to materials", "Swatches travel from supply rail to garment."],
+  ["15", "Sampling", "Close the physical loop", "Digital garment dissolves into sample evidence."],
+  ["16", "Documentation", "Keep the product legible", "Tech pack and BOM orbit the current state."],
+  ["17", "Mission control", "Scale from style to collection", "One garment pulls back into a style constellation."],
+  ["18", "Copilot", "Ask about this product", "Response highlights only grounded product objects."],
+  ["19", "Human approval", "The designer decides", "Proposed and original states merge or return."],
+  ["20", "Waitlist", "Join Artifex", "The completed journey converts into a qualified form."],
+] as const;
+
+function WireframeMap({ onBack, onJourney, onJoin }: { onBack: () => void; onJourney: () => void; onJoin: () => void }) {
+  const [selected, setSelected] = useState(0);
+  const screen = storyboardScreens[selected];
+  return (
+    <main className="wireframe-page">
+      <div className="wireframe-topbar"><button className="back-link" onClick={onBack}><ArrowLeft size={16} /> Back to landing</button><span className="journey-label">ARTIFEX / VISUAL WIREFRAME MAP</span><button className="journey-join" onClick={onJoin}>Join waitlist <ArrowUpRight size={15} /></button></div>
+      <section className="wireframe-intro"><p className="eyebrow"><span className="eyebrow-line" /> Make the journey visible</p><h1>One garment.<br /><em>Twenty states.</em></h1><p>Use this map to understand how the landing page and designer simulation fit together. Select a screen to inspect the layout, the animation, and the visitor action.</p><div className="wireframe-actions"><button className="button button-dark" onClick={onJourney}>Play the cinematic journey <ArrowUpRight size={16} /></button><button className="button button-outline" onClick={onJoin}>Join Artifex Waitlist <ArrowUpRight size={16} /></button></div></section>
+      <section className="wireframe-workspace">
+        <aside className="wireframe-index"><div className="wireframe-index-title"><span>SCREEN MAP</span><small>{String(selected + 1).padStart(2, "0")} / 20 selected</small></div>{storyboardScreens.map((item, index) => <button key={item[0]} className={index === selected ? "map-item active" : "map-item"} onClick={() => setSelected(index)}><span>{item[0]}</span><b>{item[1]}</b><small>{item[2]}</small></button>)}</aside>
+        <div className="wireframe-detail"><div className="wireframe-detail-head"><div><span className="chapter-kicker">{screen[0]} / {screen[1]}</span><h2>{screen[2]}</h2></div><div className="wireframe-arrow"><button onClick={() => setSelected(Math.max(0, selected - 1))} disabled={!selected}><ChevronLeft size={17} /></button><button onClick={() => setSelected(Math.min(storyboardScreens.length - 1, selected + 1))} disabled={selected === storyboardScreens.length - 1}><ChevronRight size={17} /></button></div></div><div className={`wireframe-canvas canvas-${selected + 1}`}><div className="canvas-top"><span>ARTIFEX / {screen[0]}</span><span>{screen[1].toUpperCase()}</span></div><div className="canvas-grid" />{selected === 0 && <><div className="canvas-headline">FROM CREATIVE<br /><em>INTENT</em> TO<br />PRODUCTION REALITY.</div><div className="canvas-garment"><Garment mode="mini" /></div><div className="canvas-annotation annotation-a">SILHOUETTE <i>01</i></div><div className="canvas-annotation annotation-b">SURFACE <i>02</i></div></>}{selected > 0 && selected < 19 && <><div className="canvas-wire-object"><div className="wire-avatar" /><div className="wire-garment" /><div className="wire-layers"><span /><span /><span /><span /></div></div><div className="canvas-ui"><span className="ui-line long" /><span className="ui-line" /><span className="ui-line medium" /><span className="ui-pill" /><span className="ui-pill" /><span className="ui-card" /><span className="ui-card short" /></div><div className="canvas-title">{screen[1]}<small>{screen[3]}</small></div></>}{selected === 19 && <div className="canvas-form"><span className="ui-line long" /><span className="form-line" /><span className="form-line" /><span className="form-line" /><span className="form-button">JOIN ARTIFEX WAITLIST <ArrowUpRight size={14} /></span></div>}<div className="canvas-bottom"><span>CONCEPTUAL VISUAL SIMULATION</span><span>{screen[3]}</span></div></div><div className="wireframe-explain"><div><span>WHAT HAPPENS</span><p>{screen[3]}</p></div><div><span>VISITOR ACTION</span><p>{selected === 19 ? "Complete name, email, company, role, and optional reason for interest." : selected === 0 ? "Scroll into the guided story or enter the designer simulation." : "Scroll to continue, or select this screen to explore its state."}</p></div><div><span>STATE</span><p>{selected < 19 ? "Pre-simulated visual state" : "Conversion state"}</p></div></div></div>
+      </section>
+    </main>
+  );
+}
 
 function Garment({ mode = "hero", material = "silver", pattern = false }: { mode?: "hero" | "studio" | "mini"; material?: string; pattern?: boolean }) {
   return (
@@ -118,6 +156,7 @@ function Nav({ view, onView, onJoin, menuOpen, setMenuOpen }: { view: View; onVi
       </button>
       <nav className={`nav-links ${menuOpen ? "open" : ""}`}>
         <button className={view === "journey" ? "nav-link active" : "nav-link"} onClick={() => { onView("journey"); setMenuOpen(false); }}>Designer journey <ArrowUpRight size={14} /></button>
+        <button className={view === "wireframes" ? "nav-link active" : "nav-link"} onClick={() => { onView("wireframes"); setMenuOpen(false); }}>Wireframe map <ArrowUpRight size={14} /></button>
         <a className="nav-link" href="#principle" onClick={() => setMenuOpen(false)}>Why Artifex</a>
         <a className="nav-link" href="#position" onClick={() => setMenuOpen(false)}>Positioning</a>
         <button className="nav-join" onClick={() => { onJoin(); setMenuOpen(false); }}>Join early access <ArrowUpRight size={15} /></button>
@@ -304,5 +343,5 @@ export default function Home() {
   const joinRef = useRef<HTMLDivElement>(null);
   useEffect(() => { document.title = "Artifex — Creative Engineering for Fashion"; }, []);
   const goJoin = () => { setView("landing"); window.setTimeout(() => document.getElementById("join")?.scrollIntoView({ behavior: "smooth" }), 50); };
-  return <div className="app-shell"><Nav view={view} onView={setView} onJoin={goJoin} menuOpen={menuOpen} setMenuOpen={setMenuOpen} />{view === "landing" ? <Landing onJourney={() => { setView("journey"); window.scrollTo({ top: 0, behavior: "smooth" }); }} onJoin={goJoin} /> : <Journey onBack={() => { setView("landing"); window.scrollTo({ top: 0, behavior: "smooth" }); }} onJoin={goJoin} />}</div>;
+  return <div className="app-shell"><Nav view={view} onView={setView} onJoin={goJoin} menuOpen={menuOpen} setMenuOpen={setMenuOpen} />{view === "landing" ? <Landing onJourney={() => { setView("journey"); window.scrollTo({ top: 0, behavior: "smooth" }); }} onJoin={goJoin} /> : view === "journey" ? <Journey onBack={() => { setView("landing"); window.scrollTo({ top: 0, behavior: "smooth" }); }} onJoin={goJoin} /> : <WireframeMap onBack={() => { setView("landing"); window.scrollTo({ top: 0, behavior: "smooth" }); }} onJourney={() => { setView("journey"); window.scrollTo({ top: 0, behavior: "smooth" }); }} onJoin={goJoin} />}</div>;
 }
