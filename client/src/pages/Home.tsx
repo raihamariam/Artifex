@@ -265,7 +265,7 @@ function Landing({ onJourney, onJoin }: { onJourney: () => void; onJoin: () => v
   return (
     <main className="landing-page">
       <section className="master-hero" id="top">
-        <div className="master-hero-stage"><div className="hero-stage-grid" /><Garment mode="hero" pattern /><div className="sketch-echo" /><div className="hero-caption"><span>ARTIFEX / GARMENT 001</span><span>SKETCH → DIMENSIONAL SAMPLE</span></div></div>
+        <div className="master-hero-stage"><div className="hero-stage-grid" /><Garment mode="hero" pattern /><div className="sketch-echo" /></div>
         <div className="master-hero-copy"><p className="eyebrow"><span className="eyebrow-line" /> Creative engineering for fashion</p><h1>From creative intent<br />to <em>engineered reality.</em></h1><p>An idea is only the beginning.</p><div className="hero-actions"><button className="button button-dark" onClick={onJourney}>Experience Artifex <ArrowUpRight size={17} /></button><button className="button button-outline" onClick={onJoin}>Join waitlist</button></div></div>
         <a className="master-scroll" href="#garment-system">Scroll to enter <ChevronDown size={16} /></a>
       </section>
