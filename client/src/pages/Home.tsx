@@ -76,13 +76,14 @@ const journeyChapters = [
   { key: "sourcing", phase: "Production", title: "Change supply, see consequences", body: "Supplier choice immediately changes cost, lead time, minimum order, and risk.", environment: "supply intelligence" },
   { key: "costing", phase: "Production", title: "See the garment commercially", body: "Components carry prices and production volume reveals the commercial effect of earlier decisions.", environment: "commercial intelligence" },
   { key: "release", phase: "Release", title: "Cross the approval boundary", body: "A production approver unlocks release and the garment becomes production ready.", environment: "release gate" },
-  { key: "community", phase: "Community", title: "Share structured fashion work", body: "Discover projects, fork garments, collaborate with specialists, and grow from one evolving product model while creator credit and editable engineering knowledge remain intact.", environment: "community ecosystem" },
   { key: "mission", phase: "Release", title: "Scale from style to collection", body: "The camera moves from one garment to an AW27 collection command centre.", environment: "mission control" },
   { key: "knowledge", phase: "Release", title: "Turn garments into knowledge", body: "A selected seam reveals related construction, material, fit, history, and quality knowledge.", environment: "knowledge graph" },
   { key: "conversation", phase: "Release", title: "One conversation. Every layer.", body: "The same contextual Copilot carries intent across design, geometry, fit, material, production, cost, and documentation.", environment: "conversation reveal" },
   { key: "autonomy", phase: "Release", title: "Observe. Suggest. Execute.", body: "Autonomy detects a bounded low-risk problem, acts within policy, and leaves the designer in control of consequential boundaries.", environment: "autonomy controls" },
   { key: "evidence", phase: "Release", title: "Why did Artifex change this?", body: "Every suggestion or bounded action can be traced to evidence, rule, impact, confidence, and the product state it changed.", environment: "evidence drawer" },
+  { key: "release-ready", phase: "Release", title: "Production-ready product truth", body: "Release closes the development loop: the approved garment, documentation, evidence, and knowledge are ready to move into the world.", environment: "production-ready summary" },
   { key: "ending", phase: "Release", title: "One garment. One evolving system.", body: "Creative intent, engineering, material, production, evidence, and knowledge return to the exact garment that began the project.", environment: "integrated product truth" },
+  { key: "community", phase: "Community", title: "Share structured fashion work", body: "Discover projects, fork garments, collaborate with specialists, and grow from one evolving product model while creator credit and editable engineering knowledge remain intact.", environment: "community ecosystem" },
 ] as const;
 
 const investorJourneyChapters = [
@@ -125,6 +126,7 @@ const copilotContexts: Record<JourneyKey, { prompt: string; context: string; sta
   conversation: { prompt: "Show me everything this garment knows.", context: "AW27 / LOOK 07 / full product graph", stages: ["Reading creative intent", "Tracing engineering decisions", "Connecting material and production", "Summarising product lineage"], outcome: "One conversation now spans the garment’s entire product state" },
   autonomy: { prompt: "Explain what you changed and why.", context: "Autonomous fit correction / evidence log", stages: ["Separating request from autonomous action", "Opening evidence", "Reading policy and rule", "Showing impact and confidence"], outcome: "Copilot explains; autonomy detects and acts within policy" },
   evidence: { prompt: "Show the evidence behind this correction.", context: "Fit correction / evidence record #2841", stages: ["Opening issue record", "Checking governing rule", "Measuring product impact", "Summarising confidence"], outcome: "The decision is explainable, attributable, and reversible" },
+  "release-ready": { prompt: "Show what is ready for production.", context: "GARMENT / 001 / release package", stages: ["Checking approval boundary", "Collecting current documentation", "Confirming evidence", "Preparing release state"], outcome: "The approved garment and its product truth are ready to move forward" },
   community: { prompt: "Fork this drape into a new exploration without losing its history.", context: "Drape lineage / approved garment state", stages: ["Preserving source lineage", "Creating a non-destructive branch", "Attaching attribution", "Opening a collaborative exploration"], outcome: "A new lineage is created without breaking the original product truth" },
   ending: { prompt: "Summarise this garment’s journey.", context: "GARMENT / 001 / integrated product truth", stages: ["Collecting creative decisions", "Collecting engineering evidence", "Collecting production state", "Resolving the connected garment"], outcome: "One garment. One evolving system." },
   "investor-idea": { prompt: "Turn this intent into a connected garment project.", context: "Moodboard + sketch + creative direction", stages: ["Reading creative references", "Identifying silhouette", "Mapping early constraints", "Creating connected garment state"], outcome: "Creative intent is now a living garment project" },
@@ -458,7 +460,7 @@ function Journey({ onBack, onJoin }: { onBack: () => void; onJoin: () => void })
   const activeChapters = journeyChapters;
   const chapter = activeChapters[active];
   const key = chapter.key as JourneyKey;
-  const layerTargets: Record<string, number> = { creative: 0, collaboration: 1, engineering: 4, materials: 8, production: 13, release: 18, community: 19 };
+  const layerTargets: Record<string, number> = { creative: 0, collaboration: 1, engineering: 4, materials: 8, production: 13, release: 18, community: 26 };
   const materialForStage = key === "textile" || key === "propagation" || key === "investor-materials" ? material : key === "surface" ? colour : key === "creative" ? "ink" : "silver";
   const recommendation = optimise === "Fit" ? "B" : optimise === "Creative intent" ? "C" : "A";
   const go = (next: number) => {
