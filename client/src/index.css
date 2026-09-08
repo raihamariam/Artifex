@@ -382,3 +382,7 @@ h1, h2, h3, p { margin-top: 0; }
 @media(max-width:720px){.persistent-copilot{position:fixed;left:10px;right:10px;bottom:10px;width:auto;max-height:68vh}.copilot-orb{position:fixed;right:12px;bottom:12px}.persistent-copilot>label{padding-top:9px}.persistent-copilot textarea{min-height:52px}.copilot-tools{padding-bottom:7px}.persistent-copilot footer{position:sticky;bottom:0;background:rgba(19,22,20,.98)}.conversation-thread{display:none}.cost-paths{inset:10% 2%;grid-template-columns:1fr 1fr}.cost-paths span{padding:8px}.evidence-drawer{right:2%;top:7%;width:190px}}
 
 .copilot-continuity-note{margin-top:10px}.copilot-mini-orb{display:grid;place-items:center;width:24px;height:24px;flex:0 0 24px;border-radius:50%;background:var(--acid);color:var(--ink);box-shadow:0 0 0 5px rgba(185,255,56,.12)}
+
+/* Visual edit: lower the selected hero copy slightly to preserve separation from the garment annotation above. */
+.master-hero-copy{transform:translateY(20px)}
+@media(max-width:700px){.master-hero-copy{transform:translateY(10px)}}
