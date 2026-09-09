@@ -454,3 +454,6 @@ h1, h2, h3, p { margin-top: 0; }
 
 /* Product Graph interaction fix: pointer-safe drag surface and explicit node hover state. */
 .product-graph-scene{touch-action:none;cursor:grab}.product-graph-scene:active{cursor:grabbing}.product-graph-node{z-index:20;pointer-events:auto}.product-graph-node.is-hovered{transform:translateY(-6px) scale(1.04);border-color:var(--acid);color:var(--acid);background:rgba(30,38,25,.94);box-shadow:0 0 0 1px rgba(185,255,56,.2),0 0 24px rgba(185,255,56,.22)}.product-graph-node.is-hovered i{box-shadow:0 0 18px var(--acid),0 0 0 5px rgba(185,255,56,.22)}.product-graph-garment{will-change:transform}
+
+/* Waitlist submission states */
+.waitlist button:disabled,.waitlist-dialog button:disabled{opacity:.58;cursor:wait}.waitlist-error{display:block;color:#a74736;font-size:11px;line-height:1.35}.waitlist form>.waitlist-error{grid-column:1/-1;margin-top:-4px}.waitlist-dialog .waitlist-error{margin:0 0 2px}

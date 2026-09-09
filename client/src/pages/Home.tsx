@@ -239,17 +239,49 @@ function Nav({ view, onView, onJoin, menuOpen, setMenuOpen }: { view: View; onVi
   );
 }
 
+const WAITLIST_ENDPOINT = "https://script.google.com/macros/s/AKfycbz66DkB9uRW2j00QUWS8w-71QLwqfgh_ApsE9CltJ3IL0foBK8IpB3mAS85rW2yIGbs/exec";
+
+type WaitlistPayload = { fullName: string; email: string; role: string; interest?: string };
+
+async function submitWaitlist(payload: WaitlistPayload) {
+  const body = new URLSearchParams({
+    fullName: payload.fullName,
+    name: payload.fullName,
+    email: payload.email,
+    role: payload.role,
+    interest: payload.interest || "",
+  });
+  await fetch(WAITLIST_ENDPOINT, {
+    method: "POST",
+    mode: "no-cors",
+    headers: { "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8" },
+    body,
+  });
+}
+
 function Waitlist({ compact = false }: { compact?: boolean }) {
   const [email, setEmail] = useState("");
-  const [submitted, setSubmitted] = useState(false);
+  const [status, setStatus] = useState<"idle" | "submitting" | "success" | "error">("idle");
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    if (!email.includes("@") || status === "submitting") return;
+    setStatus("submitting");
+    try {
+      await submitWaitlist({ fullName: "", email, role: "Landing page" });
+      setStatus("success");
+    } catch {
+      setStatus("error");
+    }
+  };
   return (
     <div className={`waitlist ${compact ? "compact" : ""}`}>
-      {submitted ? (
+      {status === "success" ? (
         <div className="success-state"><span className="success-icon"><Check size={15} /></span><span><strong>You are on the list.</strong><small>We’ll let you know when the next chapter is ready.</small></span></div>
       ) : (
-        <form onSubmit={(event) => { event.preventDefault(); if (email.includes("@")) setSubmitted(true); }}>
-          <input value={email} onChange={(event) => setEmail(event.target.value)} type="email" placeholder="Your email address" aria-label="Email address" required />
-          <button type="submit">{compact ? "Join" : "Join early access"}<ArrowUpRight size={16} /></button>
+        <form onSubmit={handleSubmit}>
+          <input value={email} onChange={(event) => { setEmail(event.target.value); if (status === "error") setStatus("idle"); }} type="email" placeholder="Your email address" aria-label="Email address" required />
+          <button type="submit" disabled={status === "submitting"}>{status === "submitting" ? "Joining…" : compact ? "Join" : "Join early access"}<ArrowUpRight size={16} /></button>
+          {status === "error" && <small className="waitlist-error">Something went wrong. Please try again.</small>}
         </form>
       )}
     </div>
@@ -257,9 +289,30 @@ function Waitlist({ compact = false }: { compact?: boolean }) {
 }
 
 function WaitlistModal({ open, onClose }: { open: boolean; onClose: () => void }) {
-  const [submitted, setSubmitted] = useState(false);
+  const [status, setStatus] = useState<"idle" | "submitting" | "success" | "error">("idle");
+  const [errorMessage, setErrorMessage] = useState("");
   if (!open) return null;
-  return <div className="waitlist-modal" role="dialog" aria-modal="true" aria-label="Join Artifex waitlist"><button className="modal-backdrop" onClick={onClose} aria-label="Close waitlist" /><div className="waitlist-dialog"><button className="modal-close" onClick={onClose}><X size={18} /></button>{submitted ? <div className="modal-success"><span><Check size={22} /></span><p className="eyebrow">ARTIFEX / EARLY ACCESS</p><h2>You are part of<br /><em>the beginning.</em></h2><p>Thank you. This prototype demonstrates the Artifex product vision; we will share future developments with you.</p><button className="button button-dark" onClick={onClose}>Return to Artifex</button></div> : <><p className="eyebrow"><span className="eyebrow-line" /> Early access</p><h2>Join<br /><em>Artifex.</em></h2><p>Be among the first to experience a connected creative-engineering environment for fashion.</p><form onSubmit={(event) => { event.preventDefault(); setSubmitted(true); }}><label>Full Name<input required placeholder="Your full name" /></label><label>Email<input required type="email" placeholder="you@company.com" /></label><label>Role<select defaultValue="Fashion Designer"><option>Fashion Designer</option><option>Technical Designer</option><option>Pattern Maker</option><option>Brand / Label</option><option>Manufacturer</option><option>Student</option><option>Investor</option><option>Technology</option><option>Other</option></select></label><label className="full">What brings you to Artifex? <small>Optional</small><textarea placeholder="Tell us what you would want Artifex to connect." /></label><button className="action-primary full" type="submit">Join Artifex Waitlist <ArrowUpRight size={15} /></button></form><small className="concept-note">Conceptual visual prototype. Your information will be used for Artifex early-access communication.</small></>}</div></div>;
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    if (status === "submitting") return;
+    const form = new FormData(event.currentTarget);
+    const payload: WaitlistPayload = {
+      fullName: String(form.get("fullName") || "").trim(),
+      email: String(form.get("email") || "").trim(),
+      role: String(form.get("role") || "").trim(),
+      interest: String(form.get("interest") || "").trim(),
+    };
+    setStatus("submitting");
+    setErrorMessage("");
+    try {
+      await submitWaitlist(payload);
+      setStatus("success");
+    } catch {
+      setStatus("error");
+      setErrorMessage("We couldn’t submit your details. Please try again.");
+    }
+  };
+  return <div className="waitlist-modal" role="dialog" aria-modal="true" aria-label="Join Artifex waitlist"><button className="modal-backdrop" onClick={onClose} aria-label="Close waitlist" /><div className="waitlist-dialog"><button className="modal-close" onClick={onClose}><X size={18} /></button>{status === "success" ? <div className="modal-success"><span><Check size={22} /></span><p className="eyebrow">ARTIFEX / EARLY ACCESS</p><h2>You are part of<br /><em>the beginning.</em></h2><p>Thank you. This prototype demonstrates the Artifex product vision; we will share future developments with you.</p><button className="button button-dark" onClick={onClose}>Return to Artifex</button></div> : <><p className="eyebrow"><span className="eyebrow-line" /> Early access</p><h2>Join<br /><em>Artifex.</em></h2><p>Be among the first to experience a connected creative-engineering environment for fashion.</p><form onSubmit={handleSubmit}><label>Full Name<input name="fullName" required placeholder="Your full name" /></label><label>Email<input name="email" required type="email" placeholder="you@company.com" /></label><label>Role<select name="role" defaultValue="Fashion Designer"><option>Fashion Designer</option><option>Technical Designer</option><option>Pattern Maker</option><option>Brand / Label</option><option>Manufacturer</option><option>Student</option><option>Investor</option><option>Technology</option><option>Other</option></select></label><label className="full">What brings you to Artifex? <small>Optional</small><textarea name="interest" placeholder="Tell us what you would want Artifex to connect." /></label>{status === "error" && <p className="waitlist-error full" role="alert">{errorMessage}</p>}<button className="action-primary full" type="submit" disabled={status === "submitting"}>{status === "submitting" ? "Joining Artifex…" : "Join Artifex Waitlist"} <ArrowUpRight size={15} /></button></form><small className="concept-note">Your details will be added to the Artifex early-access list.</small></>}</div></div>;
 }
 
 const cinematicChapters = [
