@@ -5,6 +5,7 @@ import fs from "node:fs";
 import path from "node:path";
 import { defineConfig, type Plugin, type ViteDevServer } from "vite";
 import { vitePluginManusRuntime } from "vite-plugin-manus-runtime";
+import { handleWaitlist } from "./server/waitlist";
 
 // =============================================================================
 // Manus Debug Collector - Vite Plugin
@@ -203,7 +204,31 @@ function vitePluginStorageProxy(): Plugin {
   };
 }
 
-const plugins = [react(), tailwindcss(), jsxLocPlugin(), vitePluginManusRuntime(), vitePluginManusDebugCollector(), vitePluginStorageProxy()];
+function vitePluginWaitlistApi(): Plugin {
+  return {
+    name: "artifex-waitlist-api",
+    configureServer(server: ViteDevServer) {
+      server.middlewares.use("/api/waitlist", (req, res, next) => {
+        if (req.method !== "POST") return next();
+        let raw = "";
+        req.on("data", (chunk) => { raw += chunk.toString(); });
+        req.on("end", async () => {
+          try {
+            const payload = raw ? JSON.parse(raw) : {};
+            const result = await handleWaitlist(payload);
+            res.writeHead(result.status, { "Content-Type": "application/json; charset=utf-8", "Cache-Control": "no-store" });
+            res.end(JSON.stringify(result.body));
+          } catch {
+            res.writeHead(400, { "Content-Type": "application/json; charset=utf-8" });
+            res.end(JSON.stringify({ success: false, error: "Invalid waitlist request." }));
+          }
+        });
+      });
+    },
+  };
+}
+
+const plugins = [react(), tailwindcss(), jsxLocPlugin(), vitePluginManusRuntime(), vitePluginManusDebugCollector(), vitePluginStorageProxy(), vitePluginWaitlistApi()];
 
 export default defineConfig({
   plugins,

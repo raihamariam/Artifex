@@ -248,11 +248,19 @@ async function submitWaitlist(payload: WaitlistPayload): Promise<WaitlistResult>
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(payload),
   });
+  const contentType = response.headers.get("content-type") || "";
+  const raw = await response.text();
+  console.debug("[Artifex waitlist] response", { url: response.url, status: response.status, contentType, raw });
+  if (!contentType.toLowerCase().includes("application/json")) {
+    console.error("[Artifex waitlist] expected JSON response", { url: response.url, status: response.status, contentType, raw });
+    throw new Error("The waitlist service returned a non-JSON response.");
+  }
   let result: WaitlistResult;
   try {
-    result = await response.json();
+    result = JSON.parse(raw) as WaitlistResult;
   } catch {
-    throw new Error("The waitlist service returned an invalid response.");
+    console.error("[Artifex waitlist] invalid JSON response", { url: response.url, status: response.status, contentType, raw });
+    throw new Error("The waitlist service returned invalid JSON.");
   }
   if (!response.ok || result.success !== true) {
     throw new Error(result.error || result.message || "We couldn’t add you to the waitlist.");
