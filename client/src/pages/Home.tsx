@@ -239,24 +239,16 @@ function Nav({ view, onView, onJoin, menuOpen, setMenuOpen }: { view: View; onVi
   );
 }
 
-const WAITLIST_ENDPOINT = "https://script.google.com/macros/s/AKfycbz66DkB9uRW2j00QUWS8w-71QLwqfgh_ApsE9CltJ3IL0foBK8IpB3mAS85rW2yIGbs/exec";
-
 type WaitlistPayload = { fullName: string; email: string; role: string; interest?: string };
+type WaitlistResult = { success?: boolean; duplicate?: boolean; error?: string; message?: string };
 
-async function submitWaitlist(payload: WaitlistPayload) {
-  const body = new URLSearchParams({
-    fullName: payload.fullName,
-    name: payload.fullName,
-    email: payload.email,
-    role: payload.role,
-    interest: payload.interest || "",
-  });
-  const response = await fetch(WAITLIST_ENDPOINT, {
+async function submitWaitlist(payload: WaitlistPayload): Promise<WaitlistResult> {
+  const response = await fetch("/api/waitlist", {
     method: "POST",
-    headers: { "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8" },
-    body,
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(payload),
   });
-  let result: { success?: boolean; error?: string; message?: string };
+  let result: WaitlistResult;
   try {
     result = await response.json();
   } catch {
@@ -265,18 +257,21 @@ async function submitWaitlist(payload: WaitlistPayload) {
   if (!response.ok || result.success !== true) {
     throw new Error(result.error || result.message || "We couldn’t add you to the waitlist.");
   }
+  return result;
 }
 
 function Waitlist({ compact = false }: { compact?: boolean }) {
   const [email, setEmail] = useState("");
   const [status, setStatus] = useState<"idle" | "submitting" | "success" | "error">("idle");
   const [errorMessage, setErrorMessage] = useState("");
+  const [duplicate, setDuplicate] = useState(false);
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (!email.includes("@") || status === "submitting") return;
     setStatus("submitting");
     try {
-      await submitWaitlist({ fullName: "", email, role: "Landing page" });
+      const result = await submitWaitlist({ fullName: "Landing Page Visitor", email, role: "Landing page" });
+      setDuplicate(result.duplicate === true);
       setStatus("success");
     } catch (error) {
       setStatus("error");
@@ -286,7 +281,7 @@ function Waitlist({ compact = false }: { compact?: boolean }) {
   return (
     <div className={`waitlist ${compact ? "compact" : ""}`}>
       {status === "success" ? (
-        <div className="success-state"><span className="success-icon"><Check size={15} /></span><span><strong>You are on the list.</strong><small>We’ll let you know when the next chapter is ready.</small></span></div>
+        <div className="success-state"><span className="success-icon"><Check size={15} /></span><span><strong>{duplicate ? "You’re already on the Artifex early-access list." : "You are on the list."}</strong><small>{duplicate ? "Your existing early-access entry is still active." : "We’ll let you know when the next chapter is ready."}</small></span></div>
       ) : (
         <form onSubmit={handleSubmit}>
           <input value={email} onChange={(event) => { setEmail(event.target.value); if (status === "error") setStatus("idle"); }} type="email" placeholder="Your email address" aria-label="Email address" required />
@@ -301,6 +296,7 @@ function Waitlist({ compact = false }: { compact?: boolean }) {
 function WaitlistModal({ open, onClose }: { open: boolean; onClose: () => void }) {
   const [status, setStatus] = useState<"idle" | "submitting" | "success" | "error">("idle");
   const [errorMessage, setErrorMessage] = useState("");
+  const [duplicate, setDuplicate] = useState(false);
   if (!open) return null;
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -315,14 +311,15 @@ function WaitlistModal({ open, onClose }: { open: boolean; onClose: () => void }
     setStatus("submitting");
     setErrorMessage("");
     try {
-      await submitWaitlist(payload);
+      const result = await submitWaitlist(payload);
+      setDuplicate(result.duplicate === true);
       setStatus("success");
     } catch (error) {
       setStatus("error");
       setErrorMessage(error instanceof Error ? error.message : "We couldn’t submit your details. Please try again.");
     }
   };
-  return <div className="waitlist-modal" role="dialog" aria-modal="true" aria-label="Join Artifex waitlist"><button className="modal-backdrop" onClick={onClose} aria-label="Close waitlist" /><div className="waitlist-dialog"><button className="modal-close" onClick={onClose}><X size={18} /></button>{status === "success" ? <div className="modal-success"><span><Check size={22} /></span><p className="eyebrow">ARTIFEX / EARLY ACCESS</p><h2>You are part of<br /><em>the beginning.</em></h2><p>Thank you. This prototype demonstrates the Artifex product vision; we will share future developments with you.</p><button className="button button-dark" onClick={onClose}>Return to Artifex</button></div> : <><p className="eyebrow"><span className="eyebrow-line" /> Early access</p><h2>Join<br /><em>Artifex.</em></h2><p>Be among the first to experience a connected creative-engineering environment for fashion.</p><form onSubmit={handleSubmit}><label>Full Name<input name="fullName" required placeholder="Your full name" /></label><label>Email<input name="email" required type="email" placeholder="you@company.com" /></label><label>Role<select name="role" defaultValue="Fashion Designer"><option>Fashion Designer</option><option>Technical Designer</option><option>Pattern Maker</option><option>Brand / Label</option><option>Manufacturer</option><option>Student</option><option>Investor</option><option>Technology</option><option>Other</option></select></label><label className="full">What brings you to Artifex? <small>Optional</small><textarea name="interest" placeholder="Tell us what you would want Artifex to connect." /></label>{status === "error" && <p className="waitlist-error full" role="alert">{errorMessage}</p>}<button className="action-primary full" type="submit" disabled={status === "submitting"}>{status === "submitting" ? "Joining Artifex…" : "Join Artifex Waitlist"} <ArrowUpRight size={15} /></button></form><small className="concept-note">Your details will be added to the Artifex early-access list.</small></>}</div></div>;
+  return <div className="waitlist-modal" role="dialog" aria-modal="true" aria-label="Join Artifex waitlist"><button className="modal-backdrop" onClick={onClose} aria-label="Close waitlist" /><div className="waitlist-dialog"><button className="modal-close" onClick={onClose}><X size={18} /></button>{status === "success" ? <div className="modal-success"><span><Check size={22} /></span><p className="eyebrow">ARTIFEX / EARLY ACCESS</p><h2>{duplicate ? <>You’re already<br /><em>on the list.</em></> : <>You are part of<br /><em>the beginning.</em></>}</h2><p>{duplicate ? "You’re already on the Artifex early-access list." : "Thank you. This prototype demonstrates the Artifex product vision; we will share future developments with you."}</p><button className="button button-dark" onClick={onClose}>Return to Artifex</button></div> : <><p className="eyebrow"><span className="eyebrow-line" /> Early access</p><h2>Join<br /><em>Artifex.</em></h2><p>Be among the first to experience a connected creative-engineering environment for fashion.</p><form onSubmit={handleSubmit}><label>Full Name<input name="fullName" required placeholder="Your full name" /></label><label>Email<input name="email" required type="email" placeholder="you@company.com" /></label><label>Role<select name="role" defaultValue="Fashion Designer"><option>Fashion Designer</option><option>Technical Designer</option><option>Pattern Maker</option><option>Brand / Label</option><option>Manufacturer</option><option>Student</option><option>Investor</option><option>Technology</option><option>Other</option></select></label><label className="full">What brings you to Artifex? <small>Optional</small><textarea name="interest" placeholder="Tell us what you would want Artifex to connect." /></label>{status === "error" && <p className="waitlist-error full" role="alert">{errorMessage}</p>}<button className="action-primary full" type="submit" disabled={status === "submitting"}>{status === "submitting" ? "Joining Artifex…" : "Join Artifex Waitlist"} <ArrowUpRight size={15} /></button></form><small className="concept-note">Your details will be added to the Artifex early-access list.</small></>}</div></div>;
 }
 
 const cinematicChapters = [
