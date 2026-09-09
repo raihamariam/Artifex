@@ -18,7 +18,6 @@ import {
   Orbit,
   ScanLine,
   Send,
-  ShieldCheck,
   Sparkles,
   X,
 } from "lucide-react";
@@ -260,7 +259,7 @@ function Waitlist({ compact = false }: { compact?: boolean }) {
 function WaitlistModal({ open, onClose }: { open: boolean; onClose: () => void }) {
   const [submitted, setSubmitted] = useState(false);
   if (!open) return null;
-  return <div className="waitlist-modal" role="dialog" aria-modal="true" aria-label="Join Artifex waitlist"><button className="modal-backdrop" onClick={onClose} aria-label="Close waitlist" /><div className="waitlist-dialog"><button className="modal-close" onClick={onClose}><X size={18} /></button>{submitted ? <div className="modal-success"><span><Check size={22} /></span><p className="eyebrow">ARTIFEX / EARLY ACCESS</p><h2>You are part of<br /><em>the beginning.</em></h2><p>Thank you. This prototype demonstrates the Artifex product vision; we will share future developments with you.</p><button className="button button-dark" onClick={onClose}>Return to Artifex</button></div> : <><p className="eyebrow"><span className="eyebrow-line" /> Early access</p><h2>Join<br /><em>Artifex.</em></h2><p>Be among the first to experience a connected creative-engineering environment for fashion.</p><form onSubmit={(event) => { event.preventDefault(); setSubmitted(true); }}><label>Name<input required placeholder="Your name" /></label><label>Email<input required type="email" placeholder="you@company.com" /></label><label>Company<input placeholder="Company or label" /></label><label>Role<select defaultValue="Fashion Designer"><option>Fashion Designer</option><option>Technical Designer</option><option>Pattern Maker</option><option>Brand / Label</option><option>Manufacturer</option><option>Student</option><option>Investor</option><option>Technology</option><option>Other</option></select></label><label className="full">What brings you to Artifex? <small>Optional</small><textarea placeholder="Tell us what you would want Artifex to connect." /></label><button className="action-primary full" type="submit">Join Artifex Waitlist <ArrowUpRight size={15} /></button></form><small className="concept-note">Conceptual visual prototype. Your information will be used for Artifex early-access communication.</small></>}</div></div>;
+  return <div className="waitlist-modal" role="dialog" aria-modal="true" aria-label="Join Artifex waitlist"><button className="modal-backdrop" onClick={onClose} aria-label="Close waitlist" /><div className="waitlist-dialog"><button className="modal-close" onClick={onClose}><X size={18} /></button>{submitted ? <div className="modal-success"><span><Check size={22} /></span><p className="eyebrow">ARTIFEX / EARLY ACCESS</p><h2>You are part of<br /><em>the beginning.</em></h2><p>Thank you. This prototype demonstrates the Artifex product vision; we will share future developments with you.</p><button className="button button-dark" onClick={onClose}>Return to Artifex</button></div> : <><p className="eyebrow"><span className="eyebrow-line" /> Early access</p><h2>Join<br /><em>Artifex.</em></h2><p>Be among the first to experience a connected creative-engineering environment for fashion.</p><form onSubmit={(event) => { event.preventDefault(); setSubmitted(true); }}><label>Full Name<input required placeholder="Your full name" /></label><label>Email<input required type="email" placeholder="you@company.com" /></label><label>Role<select defaultValue="Fashion Designer"><option>Fashion Designer</option><option>Technical Designer</option><option>Pattern Maker</option><option>Brand / Label</option><option>Manufacturer</option><option>Student</option><option>Investor</option><option>Technology</option><option>Other</option></select></label><label className="full">What brings you to Artifex? <small>Optional</small><textarea placeholder="Tell us what you would want Artifex to connect." /></label><button className="action-primary full" type="submit">Join Artifex Waitlist <ArrowUpRight size={15} /></button></form><small className="concept-note">Conceptual visual prototype. Your information will be used for Artifex early-access communication.</small></>}</div></div>;
 }
 
 const cinematicChapters = [
@@ -357,26 +356,15 @@ function Landing({ onJourney, onJoin }: { onJourney: () => void; onJoin: () => v
         <div className="value-proofline"><span>CREATIVE CONTINUITY</span><i /><span>EARLIER TRADE-OFFS</span><i /><span>TRACEABLE RELEASES</span><i /><span>COMPOUNDING KNOWLEDGE</span></div>
       </section>
 
-      <section className="wedge-section" id="wedge">
-        <div className="section-meta"><span>06 / THE FIRST WEDGE</span><span>FOCUS WITHOUT A DEAD END</span></div>
-        <div className="wedge-header"><p className="eyebrow"><span className="eyebrow-line" /> Credible sequencing</p><h2>Start narrow.<br /><em>Build for the system.</em></h2><p>The architecture is broad by design. The first product should prove one connected workflow that customers value—not imitate an entire industry stack at launch.</p></div>
-        <div className="wedge-contrast">
-          <article className="wedge-card candidate"><span>CANDIDATE FIRST WEDGE</span><h3>Women’s dress development</h3><p>A constrained garment family where creative intent, body and fit context, AI-assisted pattern engineering, basic material behaviour, consumption, documentation, and version history stay connected.</p><div className="wedge-path">{["Design intent","Fit context","Pattern options","Material behaviour","Consumption","Living tech pack"].map((item, index) => <span key={item}><i>{String(index + 1).padStart(2,"0")}</i>{item}</span>)}</div></article>
-          <article className="wedge-card north-star"><span>LONG-TERM NORTH STAR</span><h3>Fashion development operating environment</h3><p>The same product graph can later activate sourcing, factories, costing, quality, collections, community, and enterprise governance—only when the user and product need them.</p><div className="north-star-map"><b>SHARED GARMENT GRAPH</b>{["SOURCE","COST","QUALITY","COLLECTION","KNOWLEDGE","GOVERNANCE"].map((item) => <span key={item}>{item}</span>)}</div></article>
-        </div>
-        <div className="entry-point-row"><span>VALID ENTRY POINTS</span>{["Creative intent","Existing pattern","Material","Cost constraint"].map((item) => <b key={item}>{item}</b>)}<small>One illustrative route is shown in the demo. Artifex does not force one workflow.</small></div>
-        <div className="wedge-boundary"><ShieldCheck size={17} /><span><b>Founder credibility:</b> the exact first wedge remains subject to customer discovery, pain frequency, economic impact, data availability, trust, and buying ownership.</span></div>
-      </section>
-
       <section className="position-section dark-section" id="position">
-        <div className="section-meta"><span>07 / THE POSITION</span><span>CONTINUITY ACROSS THE JOURNEY</span></div>
+        <div className="section-meta"><span>06 / THE POSITION</span><span>CONTINUITY ACROSS THE JOURNEY</span></div>
         <div className="position-header"><p className="eyebrow muted"><span className="eyebrow-line" /> Not another isolated tool</p><h2>Where creative<br /><em>intent</em> meets<br />product logic.</h2></div>
         <div className="position-rail"><div className="rail-card"><span>GENERATIVE DESIGN</span><p>creates possibilities</p><i>creative</i></div><div className="rail-card"><span>3D / CAD</span><p>models form</p><i>spatial</i></div><div className="rail-card"><span>PLM / DOCUMENTS</span><p>stores outputs</p><i>operational</i></div><div className="rail-card active"><span>ARTIFEX</span><p>connects the product journey</p><i>creative ↔ engineering</i></div></div>
         <p className="position-note">A conceptual product position: continuity across fashion development, with the designer still at the consequential boundary.</p>
       </section>
 
       <section className="waitlist-section" id="join">
-        <div className="waitlist-kicker"><span>08 / ARTIFEX 2026</span><span>EARLY ACCESS</span></div>
+        <div className="waitlist-kicker"><span>07 / ARTIFEX 2026</span><span>EARLY ACCESS</span></div>
         <h2>See what fashion<br /><em>development</em> could become.</h2>
         <p>Join the early-access list for designers, technical designers, pattern makers, and people shaping the future of fashion development.</p>
         <Waitlist />
