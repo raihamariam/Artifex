@@ -517,6 +517,10 @@ function Journey({ onBack, onJoin }: { onBack: () => void; onJoin: () => void })
   const [graphMode, setGraphMode] = useState<"today" | "artifex">("today");
   const [engineeringView, setEngineeringView] = useState<"fit" | "xray" | "alternatives">("fit");
   const dragging = useRef(false);
+  const dragFrame = useRef<number | null>(null);
+  const dragDelta = useRef(0);
+  const scrollFrame = useRef<number | null>(null);
+  const lastScrollActive = useRef(0);
   const activeChapters = journeyChapters;
   const chapter = activeChapters[active];
   const key = chapter.key as JourneyKey;
@@ -532,13 +536,23 @@ function Journey({ onBack, onJoin }: { onBack: () => void; onJoin: () => void })
   const jumpToLayer = (layer: string) => go(layerTargets[layer] ?? 0);
   useEffect(() => {
     const updateFromScroll = () => {
-      const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
-      if (maxScroll <= 0) return;
-      const next = Math.round((window.scrollY / maxScroll) * (activeChapters.length - 1));
-      setActive(Math.max(0, Math.min(activeChapters.length - 1, next)));
+      if (scrollFrame.current !== null) return;
+      scrollFrame.current = window.requestAnimationFrame(() => {
+        scrollFrame.current = null;
+        const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
+        if (maxScroll <= 0) return;
+        const next = Math.max(0, Math.min(activeChapters.length - 1, Math.round((window.scrollY / maxScroll) * (activeChapters.length - 1))));
+        if (next !== lastScrollActive.current) {
+          lastScrollActive.current = next;
+          setActive(next);
+        }
+      });
     };
     window.addEventListener("scroll", updateFromScroll, { passive: true });
-    return () => window.removeEventListener("scroll", updateFromScroll);
+    return () => {
+      window.removeEventListener("scroll", updateFromScroll);
+      if (scrollFrame.current !== null) window.cancelAnimationFrame(scrollFrame.current);
+    };
   }, [activeChapters.length]);
   const executeCopilot = (prompt: string) => {
     setCopilotPulse(true); setCopilotAction(key);
@@ -581,7 +595,7 @@ function Journey({ onBack, onJoin }: { onBack: () => void; onJoin: () => void })
       <section className="immersive-layout">
         <aside className="story-panel"><p className="eyebrow"><span className="eyebrow-line" /> {chapter.phase} / {chapter.environment}</p><h1>{chapter.title}</h1><p>{chapter.body}</p><div className="causal-line"><span>PRODUCT STATE</span><b>Garment / 001</b><small>{active === 0 ? "creative intent created" : `${activeChapters[active - 1].key} → ${chapter.key}`}</small></div><div className="journey-stepper"><button onClick={() => go(active - 1)} disabled={!active}><ChevronLeft size={17} /></button><span>{String(active + 1).padStart(2, "0")} / {activeChapters.length}</span><button onClick={() => go(active + 1)} disabled={active === activeChapters.length - 1}><ChevronRight size={17} /></button></div></aside>
 
-        <div className={`persistent-stage stage-${key} ${copilotPulse ? "copilot-changing" : ""}`} onPointerDown={(e) => { dragging.current = true; (e.currentTarget as HTMLElement).setPointerCapture(e.pointerId); }} onPointerMove={(e) => { if (dragging.current) setRotation((r) => r + e.movementX * .45); }} onPointerUp={() => { dragging.current = false; }}>
+        <div className={`persistent-stage stage-${key} ${copilotPulse ? "copilot-changing" : ""}`} onPointerDown={(e) => { dragging.current = true; (e.currentTarget as HTMLElement).setPointerCapture(e.pointerId); }} onPointerMove={(e) => { if (!dragging.current) return; dragDelta.current += e.movementX * .45; if (dragFrame.current === null) { dragFrame.current = window.requestAnimationFrame(() => { dragFrame.current = null; const delta = dragDelta.current; dragDelta.current = 0; setRotation((r) => r + delta); }); } }} onPointerUp={() => { dragging.current = false; }} onPointerCancel={() => { dragging.current = false; }}>
           <div className="stage-grid" /><div className="runway-floor" /><div className="garment-rotator" style={{ transform: `translate(-50%, -50%) rotateY(${rotation}deg) scale(${key === "fit" ? .82 + (size - 6) * .012 : 1})` }}><Garment mode="studio" material={materialForStage} pattern={key === "pattern" || key === "production" || key === "investor-production"} /></div><div className="stage-identity"><span>GARMENT / 001</span><span>drag to rotate ↔</span></div>
           {key === "creative" && <div className="creative-board"><span className="board-card mood">MOODBOARD<small>volume / tension</small></span><span className="board-card sketch">DESIGN SKETCH<small>asymmetric drape</small></span><span className="board-card intent">CREATIVE INTENT<small>sculptural · soft structure</small></span></div>}
           {key === "understanding" && <div className="garment-callouts"><button onClick={() => setSelectedRegion("Structured bodice / Front body")}>Structured bodice</button><button onClick={() => setSelectedRegion("Front draped panel / Pattern P-04 / Silk-viscose shell")}>Asymmetric drape</button><button onClick={() => setSelectedRegion("High-tension waist / Back ease")}>High-tension waist</button><button onClick={() => setSelectedRegion("Soft volume / Lower skirt")}>Soft volume</button><button onClick={() => setSelectedRegion("Hidden closure / Centre back")}>Hidden closure</button></div>}

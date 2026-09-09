@@ -457,3 +457,28 @@ h1, h2, h3, p { margin-top: 0; }
 
 /* Waitlist submission states */
 .waitlist button:disabled,.waitlist-dialog button:disabled{opacity:.58;cursor:wait}.waitlist-error{display:block;color:#a74736;font-size:11px;line-height:1.35}.waitlist form>.waitlist-error{grid-column:1/-1;margin-top:-4px}.waitlist-dialog .waitlist-error{margin:0 0 2px}
+
+/* Scroll performance pass: keep the narrative on one native scroll surface and
+   isolate the pinned canvas so mobile browsers do not repeatedly repaint the shell. */
+.immersive-journey { overscroll-behavior-y: none; }
+.immersive-sticky-shell { contain: layout paint style; }
+.immersive-sticky-shell .immersive-layout { overflow: hidden; }
+.immersive-sticky-shell .persistent-stage { contain: layout paint; will-change: contents; }
+.immersive-sticky-shell .garment-rotator { will-change: transform; transition: transform .42s var(--ease-slow); }
+.immersive-sticky-shell .stage-grid,
+.immersive-sticky-shell .runway-floor { pointer-events: none; }
+@media (max-width: 720px) {
+  html { scroll-behavior: auto; }
+  .immersive-journey { height: 1800vh; min-height: 1800vh; }
+  .immersive-sticky-shell .immersive-layout { overflow: hidden; }
+  .immersive-sticky-shell .persistent-stage { contain: strict; }
+  .immersive-sticky-shell .persistent-copilot { backdrop-filter: none; box-shadow: 0 12px 30px rgba(0,0,0,.35); }
+  .immersive-sticky-shell .runway-floor { filter: none; opacity: .7; }
+  .immersive-sticky-shell .garment-torso::after,
+  .immersive-sticky-shell .garment-skirt::after,
+  .immersive-sticky-shell .garment-aura { animation: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .immersive-sticky-shell *, .immersive-sticky-shell *::before, .immersive-sticky-shell *::after { animation-duration: .001ms !important; transition-duration: .001ms !important; }
+}
