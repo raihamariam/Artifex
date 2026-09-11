@@ -157,6 +157,7 @@ function WireframeMap({ onBack, onJourney, onJoin }: { onBack: () => void; onJou
 function Garment({ mode = "hero", material = "silver", pattern = false }: { mode?: "hero" | "studio" | "mini"; material?: string; pattern?: boolean }) {
   return (
     <div className={`garment-scene ${mode} material-${material} ${pattern ? "is-pattern" : ""}`}>
+      <img className="canonical-garment-image" src="/manus-storage/artifex-canonical-garment-tight_f0e42ecd.webp" alt="Artifex canonical silver sculptural garment" draggable={false} />
       <div className="garment-shadow" />
       <div className="garment-aura" />
       <div className="garment-body">
