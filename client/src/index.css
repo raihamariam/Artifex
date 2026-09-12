@@ -509,3 +509,17 @@ h1, h2, h3, p { margin-top: 0; }
 
 /* Reference-primary screens own the focal garment composition; keep the shared drag stage as a clean interaction surface. */
 .persistent-stage.reference-primary>.garment-rotator{opacity:0;pointer-events:none}.persistent-stage.reference-primary>.stage-grid,.persistent-stage.reference-primary>.runway-floor{opacity:.45}.reference-creative .ref-interpretation{display:none}.reference-creative .creative-hero-model{right:2%;top:1%;width:51%;height:97%}.reference-creative .ref-sketch{left:30%;top:38%;width:30%;height:48%}.reference-creative .ref-thumb{width:23%;height:31%}.reference-engineering .engineering-hero-model{left:0;top:0;width:46%;height:100%}
+
+/* Interaction repair: reference boards keep a visible, shared garment rotation state. */
+.persistent-stage.reference-primary{touch-action:none;cursor:grab}
+.persistent-stage.reference-primary:active{cursor:grabbing}
+.persistent-stage.reference-primary .ref-hero-model{transform:translateZ(0) rotateY(var(--garment-rotation, 0deg));transition:transform 120ms var(--ease-out, cubic-bezier(.23,1,.32,1));transform-style:preserve-3d}
+.persistent-stage.reference-primary .ref-material-card .garment-scene,.persistent-stage.reference-primary .collab-version-card .garment-scene,.persistent-stage.reference-primary .community-project-preview .garment-scene{transform:rotateY(var(--garment-rotation, 0deg));transform-style:preserve-3d}
+.action-feedback{margin:10px 0;padding:10px 12px;border:1px solid rgba(185,255,56,.4);background:rgba(185,255,56,.09);color:var(--acid);font-size:9px;line-height:1.35;letter-spacing:.03em}
+
+/* Actionable data cards retain the reference-board grammar. */
+.supplier-cards button{appearance:none;font:inherit;color:inherit;text-align:left;cursor:pointer}
+.supplier-cards button:focus-visible{outline:1px solid var(--acid);outline-offset:3px}
+.community-project-garment{height:58px;margin:-8px -7px 7px;overflow:hidden;background:linear-gradient(135deg,rgba(185,255,56,.16),rgba(255,255,255,.08))}
+.community-project-garment .garment-scene{height:112px;transform:scale(.34);transform-origin:top center;margin-top:-2px}
+.community-project-card .community-project-garment .journey-canonical-garment{transform:translate(-50%,-50%) scale(.68)}
