@@ -1,0 +1,175 @@
+name: Claude Autonomous Phase Runner
+
+on:
+  workflow_dispatch:
+    inputs:
+      phase:
+        description: "Phase number to execute"
+        required: true
+        default: "4"
+
+permissions:
+  contents: write
+  actions: write
+
+concurrency:
+  group: claude-autonomous-builder
+  cancel-in-progress: false
+
+jobs:
+  run-phase:
+    runs-on: ubuntu-latest
+
+    # Leave some margin under GitHub's hosted-runner job limit.
+    timeout-minutes: 330
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Locate phase
+        id: phase
+        shell: bash
+        run: |
+          PHASE_NUMBER=$(printf "%02d" "${{ inputs.phase }}")
+          PHASE_FILE="PHASES/${PHASE_NUMBER}.md"
+          RESULT_FILE="PHASE_RESULTS/${PHASE_NUMBER}.md"
+
+          echo "Phase: ${PHASE_NUMBER}"
+          echo "Prompt: ${PHASE_FILE}"
+
+          if [ ! -f "${PHASE_FILE}" ]; then
+            echo "Phase file ${PHASE_FILE} does not exist."
+            exit 1
+          fi
+
+          mkdir -p PHASE_RESULTS
+
+          echo "number=${PHASE_NUMBER}" >> "$GITHUB_OUTPUT"
+          echo "file=${PHASE_FILE}" >> "$GITHUB_OUTPUT"
+          echo "result=${RESULT_FILE}" >> "$GITHUB_OUTPUT"
+
+      - name: Run Claude Code
+        uses: anthropics/claude-code-base-action@beta
+        with:
+          claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+
+          prompt: |
+            Read CLAUDE.md completely.
+
+            You are running autonomously on a GitHub-hosted machine.
+
+            Execute this phase:
+
+            ${{ steps.phase.outputs.file }}
+
+            Read the entire phase file before implementing anything.
+
+            Continue working until either:
+
+            1. Every requirement and acceptance criterion genuinely passes, or
+            2. You encounter a genuine human blocker as defined in CLAUDE.md.
+
+            Do not ask for permission between implementation steps.
+
+            Fix ordinary failures yourself.
+
+            Before finishing, create:
+
+            ${{ steps.phase.outputs.result }}
+
+            Its first line MUST be exactly one of:
+
+            STATUS: PASS
+
+            or
+
+            STATUS: BLOCKED
+
+            Never claim PASS without objective verification.
+
+          claude_args: |
+            --max-turns 100
+            --allowedTools "Read,Write,Edit,Glob,Grep,Bash"
+
+      - name: Check phase result
+        id: result
+        shell: bash
+        run: |
+          RESULT_FILE="${{ steps.phase.outputs.result }}"
+
+          if [ ! -f "$RESULT_FILE" ]; then
+            echo "Claude did not create the required result file."
+            exit 1
+          fi
+
+          FIRST_LINE=$(head -n 1 "$RESULT_FILE")
+
+          echo "Claude reported: $FIRST_LINE"
+
+          if [ "$FIRST_LINE" = "STATUS: PASS" ]; then
+            echo "status=PASS" >> "$GITHUB_OUTPUT"
+          elif [ "$FIRST_LINE" = "STATUS: BLOCKED" ]; then
+            echo "status=BLOCKED" >> "$GITHUB_OUTPUT"
+          else
+            echo "Invalid phase result."
+            exit 1
+          fi
+
+      - name: Commit Claude changes
+        shell: bash
+        run: |
+          git config user.name "Claude Autonomous Builder"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          git add -A
+
+          if git diff --cached --quiet; then
+            echo "No repository changes to commit."
+          else
+            git commit -m "Phase ${{ steps.phase.outputs.number }} autonomous implementation"
+            git push
+          fi
+
+      - name: Calculate next phase
+        if: steps.result.outputs.status == 'PASS'
+        id: next
+        shell: bash
+        run: |
+          CURRENT="${{ inputs.phase }}"
+          NEXT=$((CURRENT + 1))
+          NEXT_PADDED=$(printf "%02d" "$NEXT")
+          NEXT_FILE="PHASES/${NEXT_PADDED}.md"
+
+          if [ -f "$NEXT_FILE" ]; then
+            echo "exists=true" >> "$GITHUB_OUTPUT"
+            echo "number=$NEXT" >> "$GITHUB_OUTPUT"
+            echo "Next phase is ${NEXT_PADDED}"
+          else
+            echo "exists=false" >> "$GITHUB_OUTPUT"
+            echo "No next phase exists. Project automation is complete."
+          fi
+
+      - name: Start next phase automatically
+        if: steps.result.outputs.status == 'PASS' && steps.next.outputs.exists == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          gh workflow run claude-phase-runner.yml \
+            --ref "${GITHUB_REF_NAME}" \
+            -f phase="${{ steps.next.outputs.number }}"
+
+          echo "Started Phase ${{ steps.next.outputs.number }}."
+
+      - name: Report blocker
+        if: steps.result.outputs.status == 'BLOCKED'
+        shell: bash
+        run: |
+          echo "======================================"
+          echo "AUTOMATION STOPPED"
+          echo "======================================"
+          echo ""
+          cat "${{ steps.phase.outputs.result }}"
