@@ -90,9 +90,9 @@ jobs:
 
             Never claim PASS without objective verification.
 
-          claude_args: |
-            --max-turns 100
-            --allowedTools "Read,Write,Edit,Glob,Grep,Bash"
+          max_turns: "100"
+          allowed_tools: "Read,Write,Edit,Glob,Grep,Bash"
+          timeout_minutes: "300"
 
       - name: Check phase result
         id: result
