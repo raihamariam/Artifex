@@ -1,0 +1,808 @@
+/*
+ * ARTIFEX — shared Experience visual system (Phase 2).
+ * Tokens are scoped to `.experience-shell` so they never leak into or
+ * collide with the landing page's global `:root` tokens in index.css.
+ * Values are derived from the 27 reference screens in /references/screens
+ * (see REFERENCE_MAP.md) — near-black editorial ground, hairline borders,
+ * acid-lime used only for active/status accents, serif display headlines
+ * paired with tracked uppercase technical sans for everything else.
+ */
+
+.experience-shell {
+  --art-bg: #0a0b0a;
+  --art-panel: rgba(255, 255, 255, 0.03);
+  --art-panel-soft: rgba(255, 255, 255, 0.06);
+  --art-border: rgba(255, 255, 255, 0.12);
+  --art-border-strong: rgba(255, 255, 255, 0.28);
+  --art-text: #f5f5f2;
+  --art-text-secondary: rgba(245, 245, 242, 0.66);
+  --art-text-muted: rgba(245, 245, 242, 0.4);
+  --art-lime: #c9ff3e;
+  --art-lime-soft: rgba(201, 255, 62, 0.14);
+  --art-lime-ink: #0a0b0a;
+
+  --art-font-display: "Cormorant Garamond", serif;
+  --art-font-body: "DM Sans", sans-serif;
+  --art-font-mono: "DM Sans", sans-serif;
+
+  --art-space-1: 4px;
+  --art-space-2: 8px;
+  --art-space-3: 12px;
+  --art-space-4: 16px;
+  --art-space-5: 24px;
+  --art-space-6: 32px;
+  --art-space-7: 48px;
+
+  --art-header-h: 64px;
+  --art-rail-w: 52px;
+  --art-content-max: 1440px;
+  --art-radius: 6px;
+  --art-radius-pill: 999px;
+  --art-ease: cubic-bezier(0.23, 1, 0.32, 1);
+
+  position: relative;
+  min-height: 100vh;
+  background-color: var(--art-bg);
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.025) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.025) 1px, transparent 1px);
+  background-size: 64px 64px;
+  color: var(--art-text);
+  font-family: var(--art-font-body);
+}
+
+/* ---------------------------------------------------------------- *
+ * Typography system
+ * ---------------------------------------------------------------- */
+
+.art-display {
+  margin: 0;
+  font-family: var(--art-font-display);
+  font-weight: 500;
+  font-size: clamp(28px, 2.6vw, 40px);
+  line-height: 1.08;
+  letter-spacing: -0.01em;
+  color: var(--art-text);
+}
+
+.art-display em {
+  font-style: italic;
+}
+
+.art-section-title {
+  margin: 0;
+  font-family: var(--art-font-body);
+  font-weight: 600;
+  font-size: 18px;
+  line-height: 1.3;
+  color: var(--art-text);
+}
+
+.art-body {
+  margin: 0;
+  font-family: var(--art-font-body);
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 1.55;
+  color: var(--art-text-secondary);
+}
+
+.art-meta {
+  font-family: var(--art-font-body);
+  font-weight: 600;
+  font-size: 10.5px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--art-text-muted);
+}
+
+.art-label {
+  font-family: var(--art-font-body);
+  font-weight: 500;
+  font-size: 11.5px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--art-text-secondary);
+}
+
+.art-mono {
+  font-family: var(--art-font-mono);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.02em;
+  font-size: 12px;
+  color: var(--art-text);
+}
+
+.art-tagline {
+  margin: 0;
+  font-family: var(--art-font-display);
+  font-style: italic;
+  font-weight: 500;
+  font-size: 15px;
+  line-height: 1.3;
+  color: var(--art-text-secondary);
+}
+
+/* ---------------------------------------------------------------- *
+ * Shell — header, layer navigation, screen progress, icon rail
+ * ---------------------------------------------------------------- */
+
+.experience-header {
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  display: flex;
+  align-items: center;
+  gap: var(--art-space-6);
+  height: var(--art-header-h);
+  padding: 0 var(--art-space-6);
+  border-bottom: 1px solid var(--art-border);
+  background: rgba(10, 11, 10, 0.92);
+  backdrop-filter: blur(6px);
+}
+
+.experience-brand {
+  font-family: var(--art-font-body);
+  font-weight: 700;
+  font-size: 15px;
+  letter-spacing: 0.14em;
+  color: var(--art-text);
+  white-space: nowrap;
+}
+
+.experience-navigation {
+  display: flex;
+  align-items: center;
+  gap: var(--art-space-5);
+  height: 100%;
+  flex: 1;
+  min-width: 0;
+}
+
+.experience-nav-tab {
+  position: relative;
+  display: flex;
+  align-items: center;
+  height: 100%;
+  padding: 0;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-family: var(--art-font-body);
+  font-weight: 500;
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--art-text-muted);
+  transition: color 0.2s var(--art-ease);
+}
+
+.experience-nav-tab:hover {
+  color: var(--art-text-secondary);
+}
+
+.experience-nav-tab.is-active {
+  color: var(--art-text);
+}
+
+.experience-nav-tab.is-active::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 2px;
+  background: var(--art-lime);
+}
+
+.experience-progress {
+  display: flex;
+  align-items: center;
+  gap: var(--art-space-3);
+  white-space: nowrap;
+}
+
+.experience-progress-count {
+  font-family: var(--art-font-mono);
+  font-variant-numeric: tabular-nums;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  color: var(--art-text-secondary);
+}
+
+.experience-progress button {
+  width: 24px;
+  height: 24px;
+  display: grid;
+  place-items: center;
+  background: transparent;
+  border: 1px solid var(--art-border);
+  border-radius: var(--art-radius);
+  color: var(--art-text-secondary);
+  cursor: pointer;
+  transition: border-color 0.2s var(--art-ease), color 0.2s var(--art-ease);
+}
+
+.experience-progress button:hover:not(:disabled) {
+  border-color: var(--art-border-strong);
+  color: var(--art-text);
+}
+
+.experience-progress button:disabled {
+  opacity: 0.3;
+  cursor: default;
+}
+
+.experience-body {
+  display: flex;
+  align-items: stretch;
+  min-height: calc(100vh - var(--art-header-h));
+}
+
+.experience-rail {
+  flex-shrink: 0;
+  width: var(--art-rail-w);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--art-space-3);
+  padding: var(--art-space-5) 0;
+  border-right: 1px solid var(--art-border);
+}
+
+.experience-main {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.experience-controls {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--art-space-4);
+  padding: var(--art-space-4) var(--art-space-6);
+  border-bottom: 1px solid var(--art-border);
+}
+
+.experience-controls .experience-back,
+.experience-controls .experience-join {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--art-space-2);
+  font-family: var(--art-font-body);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 8px 14px;
+  border-radius: var(--art-radius);
+  border: 1px solid var(--art-border);
+  background: transparent;
+  color: var(--art-text-secondary);
+  cursor: pointer;
+  transition: border-color 0.2s var(--art-ease), color 0.2s var(--art-ease);
+}
+
+.experience-controls .experience-back:hover,
+.experience-controls .experience-join:hover {
+  border-color: var(--art-border-strong);
+  color: var(--art-text);
+}
+
+.experience-content {
+  flex: 1;
+  width: 100%;
+  max-width: var(--art-content-max);
+  margin: 0 auto;
+  padding: var(--art-space-6);
+}
+
+/* ---------------------------------------------------------------- *
+ * Screen placeholder (Phase 2 — no per-screen layout yet)
+ * ---------------------------------------------------------------- */
+
+.screen-placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--art-space-3);
+  max-width: 640px;
+  margin: var(--art-space-7) auto;
+  padding: var(--art-space-7) var(--art-space-6);
+  text-align: center;
+  border: 1px dashed var(--art-border-strong);
+  border-radius: var(--art-radius);
+}
+
+/* ---------------------------------------------------------------- *
+ * Shared primitives
+ * ---------------------------------------------------------------- */
+
+.art-panel {
+  border: 1px solid var(--art-border);
+  border-radius: var(--art-radius);
+  background: var(--art-panel);
+  padding: var(--art-space-5);
+}
+
+.art-panel-label {
+  margin: 0 0 var(--art-space-3);
+}
+
+.art-section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--art-space-3);
+  max-width: 360px;
+}
+
+.art-section-body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--art-space-2);
+}
+
+/* Buttons */
+
+.art-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--art-space-2);
+  font-family: var(--art-font-body);
+  font-size: 11.5px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 10px 16px;
+  border-radius: var(--art-radius);
+  border: 1px solid var(--art-border);
+  background: transparent;
+  color: var(--art-text);
+  cursor: pointer;
+  transition: border-color 0.2s var(--art-ease), background 0.2s var(--art-ease),
+    color 0.2s var(--art-ease), filter 0.2s var(--art-ease);
+}
+
+.art-button:hover {
+  border-color: var(--art-border-strong);
+}
+
+.art-button--primary {
+  background: var(--art-lime);
+  border-color: var(--art-lime);
+  color: var(--art-lime-ink);
+}
+
+.art-button--primary:hover {
+  filter: brightness(1.06);
+  border-color: var(--art-lime);
+}
+
+.art-button--secondary {
+  background: transparent;
+  border-color: var(--art-border);
+  color: var(--art-text);
+}
+
+.art-button--ghost {
+  border-color: transparent;
+  background: transparent;
+  color: var(--art-text-secondary);
+  padding-left: 0;
+  padding-right: 0;
+}
+
+.art-button--ghost:hover {
+  color: var(--art-text);
+  border-color: transparent;
+}
+
+.art-button--technical {
+  width: 100%;
+  justify-content: flex-start;
+  background: var(--art-panel);
+}
+
+/* Icon button (rail + inline icon actions) */
+
+.art-icon-button {
+  width: 32px;
+  height: 32px;
+  display: grid;
+  place-items: center;
+  border: 1px solid var(--art-border);
+  border-radius: var(--art-radius);
+  background: transparent;
+  color: var(--art-text-secondary);
+  cursor: pointer;
+  transition: border-color 0.2s var(--art-ease), color 0.2s var(--art-ease);
+}
+
+.art-icon-button:hover {
+  border-color: var(--art-border-strong);
+  color: var(--art-text);
+}
+
+.art-icon-button--plain {
+  border-color: transparent;
+}
+
+.art-icon-button--plain:hover {
+  border-color: transparent;
+  color: var(--art-text);
+}
+
+/* Badge / status */
+
+.art-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border-radius: var(--art-radius-pill);
+  border: 1px solid var(--art-border);
+  font-family: var(--art-font-body);
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--art-text-secondary);
+}
+
+.art-badge--lime {
+  border-color: var(--art-lime);
+  color: var(--art-lime);
+  background: var(--art-lime-soft);
+}
+
+.art-badge-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: currentColor;
+  flex-shrink: 0;
+}
+
+.art-status {
+  font-family: var(--art-font-body);
+  font-weight: 600;
+  font-size: 12px;
+}
+
+.art-status--positive {
+  color: var(--art-lime);
+}
+
+.art-status--neutral {
+  color: var(--art-text-secondary);
+}
+
+/* Divider */
+
+.art-divider {
+  border: none;
+  border-top: 1px solid var(--art-border);
+  margin: var(--art-space-4) 0;
+}
+
+.art-divider--vertical {
+  width: 1px;
+  align-self: stretch;
+  background: var(--art-border);
+  margin: 0 var(--art-space-4);
+  border: none;
+}
+
+/* Tab group (segmented sidebar navigation) */
+
+.art-tab-group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--art-space-2);
+  width: 100%;
+  max-width: 220px;
+}
+
+.art-tab {
+  display: flex;
+  align-items: center;
+  gap: var(--art-space-2);
+  padding: 10px 14px;
+  border: 1px solid var(--art-border);
+  border-radius: var(--art-radius);
+  background: transparent;
+  color: var(--art-text-secondary);
+  font-family: var(--art-font-body);
+  font-size: 11.5px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  text-align: left;
+  cursor: pointer;
+  transition: background 0.2s var(--art-ease), border-color 0.2s var(--art-ease),
+    color 0.2s var(--art-ease);
+}
+
+.art-tab:hover:not(.is-active) {
+  border-color: var(--art-border-strong);
+  color: var(--art-text);
+}
+
+.art-tab.is-active {
+  background: var(--art-lime);
+  border-color: var(--art-lime);
+  color: var(--art-lime-ink);
+}
+
+/* Thumbnail / image frame */
+
+.art-image-frame {
+  border: 1px solid var(--art-border);
+  border-radius: var(--art-radius);
+  overflow: hidden;
+  background: var(--art-panel);
+}
+
+.art-image-frame.is-active {
+  border-color: var(--art-lime);
+}
+
+.art-thumbnail {
+  display: flex;
+  flex-direction: column;
+  gap: var(--art-space-2);
+}
+
+.art-thumbnail-frame {
+  aspect-ratio: 1 / 1;
+  display: grid;
+  place-items: center;
+}
+
+.art-thumbnail-caption {
+  text-align: center;
+}
+
+/* Control group wrapper */
+
+.art-control-group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--art-space-2);
+  width: 100%;
+  max-width: 220px;
+}
+
+/* Metric (labelled meter bar) */
+
+.art-metric {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.art-metric-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--art-space-3);
+}
+
+.art-metric-value {
+  font-family: var(--art-font-body);
+  font-weight: 600;
+  font-size: 12px;
+  color: var(--art-lime);
+}
+
+.art-metric-track {
+  position: relative;
+  height: 4px;
+  border-radius: 2px;
+  background: var(--art-border);
+  overflow: hidden;
+}
+
+.art-metric-fill {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  border-radius: 2px;
+  background: var(--art-lime);
+}
+
+.art-metric-ends {
+  display: flex;
+  justify-content: space-between;
+}
+
+/* Annotation (numbered technical callout) */
+
+.art-annotation {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.art-annotation-index {
+  color: var(--art-lime);
+}
+
+/* Callout (compact dot + label marker) */
+
+.art-callout {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--art-space-2);
+}
+
+.art-callout-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--art-lime);
+  flex-shrink: 0;
+}
+
+/* ---------------------------------------------------------------- *
+ * Screen 04 — 3D garment viewer (Phase 3)
+ * ---------------------------------------------------------------- */
+
+.screen-04 {
+  display: flex;
+  align-items: stretch;
+  gap: var(--art-space-6);
+  height: 640px;
+}
+
+.screen-04-left {
+  flex: 0 0 260px;
+  display: flex;
+  flex-direction: column;
+  gap: var(--art-space-5);
+}
+
+.screen-04-right {
+  flex: 0 0 220px;
+  display: flex;
+  flex-direction: column;
+  gap: var(--art-space-4);
+}
+
+.screen-04-badges {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--art-space-2);
+}
+
+.screen-04-viewport {
+  position: relative;
+  flex: 1;
+  min-width: 0;
+  border: 1px solid var(--art-border);
+  border-radius: var(--art-radius);
+  overflow: hidden;
+  background: var(--art-bg);
+}
+
+.screen-04-viewport-label {
+  position: absolute;
+  top: var(--art-space-5);
+  left: var(--art-space-5);
+  z-index: 5;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  pointer-events: none;
+}
+
+.garment-canvas {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.garment-canvas canvas {
+  display: block;
+  touch-action: none;
+}
+
+.garment-loader {
+  position: absolute;
+  inset: 0;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--art-space-2);
+  background: var(--art-bg);
+  transition: opacity 0.4s var(--art-ease);
+}
+
+.garment-loader-track {
+  width: 160px;
+  height: 2px;
+  background: var(--art-border);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.garment-loader-fill {
+  height: 100%;
+  background: var(--art-lime);
+  transition: width 0.2s var(--art-ease);
+}
+
+.garment-loader-item {
+  max-width: 220px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Minimal stacking so the 3D viewport stays visible and usable on narrow
+ * viewports. This is not the final mobile layout (Phase 3 scope is desktop-
+ * canonical) — it only guarantees the canvas is never pushed off-screen. */
+@media (max-width: 860px) {
+  .screen-04 {
+    flex-direction: column;
+    height: auto;
+  }
+
+  .screen-04-left,
+  .screen-04-right {
+    flex: none;
+    width: 100%;
+  }
+
+  .screen-04-viewport {
+    height: 420px;
+  }
+}
+
+/* ---------------------------------------------------------------- *
+ * Style-test sandbox (dev-only, see StyleTest.tsx)
+ * ---------------------------------------------------------------- */
+
+.style-test {
+  display: flex;
+  flex-direction: column;
+  gap: var(--art-space-7);
+}
+
+.style-test-block {
+  display: flex;
+  flex-direction: column;
+  gap: var(--art-space-4);
+}
+
+.style-test-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--art-space-4);
+}
+
+.style-test-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  gap: var(--art-space-4);
+}
+
+.style-test-panel {
+  min-width: 260px;
+}
+
+.style-test-hero {
+  height: 160px;
+  margin-top: var(--art-space-4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
